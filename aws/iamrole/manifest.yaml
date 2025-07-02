@@ -1,5 +1,4 @@
 name: aws-iam-role
-version: 0.0.1
 type: identity
 identity_type: aws:iam:role
 deployment:
