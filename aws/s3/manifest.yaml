@@ -6,7 +6,7 @@ deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
   terraform: github.com/nitrictech/plugins//aws/s3/module
 runtime:
-  go_module: github.com/nitrictech/plguins/aws/s3
+  go_module: github.com/nitrictech/plugins/aws/s3
 
 inputs:
 
