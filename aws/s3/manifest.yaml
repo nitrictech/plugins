@@ -1,4 +1,4 @@
-name: nitric-aws-s3-bucket
+name: aws-s3-bucket
 version: 0.0.1
 type: storage
 required_identities:

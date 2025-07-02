@@ -1,4 +1,4 @@
-name: nitric-aws-vpc
+name: aws-vpc
 version: 0.0.1
 type: infra
 deployment:

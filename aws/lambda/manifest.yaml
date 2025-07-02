@@ -1,4 +1,4 @@
-name: nitric-aws-lambda
+name: aws-lambda
 version: 0.0.1
 type: service
 required_identities:

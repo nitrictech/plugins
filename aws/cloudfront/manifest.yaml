@@ -1,4 +1,4 @@
-name: nitric-aws-cloudfront
+name: aws-cloudfront
 version: 0.0.1
 type: entrypoint
 deployment:

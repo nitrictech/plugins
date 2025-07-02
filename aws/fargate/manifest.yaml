@@ -1,4 +1,4 @@
-name: nitric-aws-fargate
+name: aws-fargate
 version: 0.0.1
 type: service
 required_identities:

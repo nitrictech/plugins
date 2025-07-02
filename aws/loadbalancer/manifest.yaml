@@ -1,4 +1,4 @@
-name: nitric-aws-lb
+name: aws-loadbalancer
 version: 0.0.1
 type: infra
 deployment:
