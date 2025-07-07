@@ -9,5 +9,7 @@ runtime:
   go_module: github.com/nitrictech/plugins/aws/s3
 
 inputs:
+  tags:
+    type: map(string)
 
-outputs:
+outputs: {}

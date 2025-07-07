@@ -4,6 +4,6 @@ deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
   terraform: github.com/nitrictech/plugins//aws/cloudfront/module
 
-inputs:
+inputs: {}
 
-outputs:
+outputs: {}

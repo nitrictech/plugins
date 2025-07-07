@@ -5,5 +5,34 @@ deployment:
   terraform: github.com/nitrictech/plugins//aws/vpc/module
 
 inputs:
+  name:
+    type: string
+    required: true
+  networking:
+    type: object
+  azs:
+    type: list(string)
+  enable_nat_gateway:
+    type: bool
+  enable_vpn_gateway:
+    type: bool
+  single_nat_gateway:
+    type: bool
+  default_security_group_ingress:
+    type: list(map(string))
+  default_security_group_egress:
+    type: list(map(string))
+  tags:
+    type: map(string)
 
 outputs:
+  vpc_id:
+    type: string
+  private_subnets:
+    type: list(string)
+  public_subnets:
+    type: list(string)
+  subnets:
+    type: list(string)
+  default_security_group_id:
+    type: string

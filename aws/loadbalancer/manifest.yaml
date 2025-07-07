@@ -5,5 +5,20 @@ deployment:
   terraform: github.com/nitrictech/plugins//aws/loadbalancer/module
 
 inputs:
+  load_balancer_type:
+    type: string
+  name:
+    type: string
+    required: true
+  internal:
+    type: bool
+  security_groups:
+    type: list(string)
+    required: true
+  subnets:
+    type: list(string)
+    required: true
 
 outputs:
+  arn: 
+    type: string

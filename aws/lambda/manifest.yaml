@@ -11,5 +11,21 @@ runtime:
   go_module: github.com/nitrictech/plugins/aws/lambda
 
 inputs:
+  architecture:
+    type: string
+  timeout:
+    type: number
+  memory:
+    type: number
+  ephemeral_storage:
+    type: number
+  environment:
+    type: map(string)
+  function_url_auth_type:
+    type: string
+  subnet_ids:
+    type: list(string)
+  security_group_ids:
+    type: list(string)
 
-outputs:
+outputs: {}
