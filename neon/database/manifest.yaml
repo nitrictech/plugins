@@ -1,0 +1,17 @@
+name: neon-db
+type: database
+icon: ./icon.svg
+required_identities: []
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: github.com/nitrictech/plugins//neon/database/module
+
+inputs:
+  project_id:
+    type: string
+    description = "The ID of the project to create the database in"    
+  branch_id:
+    type: string
+    description = "The ID of the branch to create the database in"
+
+outputs: {}
