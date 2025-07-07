@@ -1,6 +1,7 @@
 name: aws-iam-role
 type: identity
 identity_type: aws:iam:role
+icon: ./icon.svg
 deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
   terraform: github.com/nitrictech/plugins//aws/iamrole/module

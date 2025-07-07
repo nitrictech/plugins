@@ -1,5 +1,6 @@
 name: aws-fargate
 type: service
+icon: ./icon.svg
 required_identities:
   - aws:iam:role
 deployment:
