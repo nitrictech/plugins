@@ -2,9 +2,7 @@ name: aws-vpc
 type: infra
 icon: ./icon.svg
 deployment:
-  # NOTE: // is required to reference a sub-path of repository for terraform modules
-  terraform: github.com/nitrictech/plugins//aws/vpc/module
-
+  terraform: ./module
 inputs:
   name:
     type: string

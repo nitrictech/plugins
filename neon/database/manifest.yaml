@@ -3,8 +3,7 @@ type: database
 icon: ./icon.svg
 required_identities: []
 deployment:
-  # NOTE: // is required to reference a sub-path of repository for terraform modules
-  terraform: github.com/nitrictech/plugins//neon/database/module
+  terraform: ./module
 
 inputs:
   project_id:

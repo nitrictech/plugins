@@ -6,8 +6,7 @@ required_identities:
 capabilities:
   - schedules
 deployment:
-  # NOTE: // is required to reference a sub-path of repository for terraform modules
-  terraform: github.com/nitrictech/plugins//aws/lambda/module
+  terraform: ./module
 runtime:
   go_module: github.com/nitrictech/plugins/aws/lambda
 

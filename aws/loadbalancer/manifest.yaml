@@ -1,9 +1,7 @@
 name: aws-loadbalancer
 type: infra
 deployment:
-  # NOTE: // is required to reference a sub-path of repository for terraform modules
-  terraform: github.com/nitrictech/plugins//aws/loadbalancer/module
-
+  terraform: ./module
 inputs:
   load_balancer_type:
     type: string
