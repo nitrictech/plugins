@@ -4,13 +4,10 @@ icon: ./icon.svg
 required_identities: []
 deployment:
   terraform: ./module
-
 inputs:
   project_id:
     type: string
-    description = "The ID of the project to create the database in"    
   branch_id:
     type: string
-    description = "The ID of the branch to create the database in"
 
 outputs: {}
