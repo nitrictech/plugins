@@ -1,5 +1,6 @@
 name: aws-loadbalancer
 type: infra
+icon: ./icon.svg
 deployment:
   terraform: ./module
 inputs:
