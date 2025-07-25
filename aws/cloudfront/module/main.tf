@@ -122,8 +122,86 @@ resource "aws_cloudfront_function" "api-url-rewrite-function" {
   })
 }
 
+resource "aws_wafv2_web_acl" "cloudfront_waf" {
+  count = var.waf_enabled ? 1 : 0
+
+  name  = "${var.nitric.name}-cloudfront-waf"
+  scope = "CLOUDFRONT"
+
+  default_action {
+    allow {}
+  }
+
+  # Rate limiting rule for DDoS protection
+  dynamic "rule" {
+    for_each = var.rate_limit_enabled ? [1] : []
+
+    content {
+      name     = "RateLimitRule"
+      priority = 1
+
+      action {
+        block {}
+      }
+
+      statement {
+        rate_based_statement {
+          limit              = var.rate_limit_requests_per_5min
+          aggregate_key_type = "IP"
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = "RateLimitRule"
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.waf_managed_rules
+
+    content {
+      name     = rule.value.name
+      priority = rule.value.priority
+
+      override_action {
+        dynamic "none" {
+          for_each = rule.value.override_action == "none" ? [1] : []
+          content {}
+        }
+        dynamic "count" {
+          for_each = rule.value.override_action == "count" ? [1] : []
+          content {}
+        }
+      }
+
+      statement {
+        managed_rule_group_statement {
+          name        = rule.value.name
+          vendor_name = "AWS"
+        }
+      }
+
+      visibility_config {
+        cloudwatch_metrics_enabled = true
+        metric_name                = rule.value.name
+        sampled_requests_enabled   = true
+      }
+    }
+  }
+
+  visibility_config {
+    cloudwatch_metrics_enabled = true
+    metric_name                = "${var.nitric.name}-cloudfront-waf"
+    sampled_requests_enabled   = true
+  }
+}
+
 resource "aws_cloudfront_distribution" "distribution" {
   enabled = true
+  web_acl_id = var.waf_enabled ? aws_wafv2_web_acl.cloudfront_waf[0].arn : null
 
   dynamic "origin" {
     for_each = local.non_vpc_origins
@@ -209,7 +287,8 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "none"
+      restriction_type = var.geo_restriction_type
+      locations        = var.geo_restriction_type != "none" ? var.geo_restriction_locations : []
     }
   }
 
