@@ -125,8 +125,9 @@ resource "aws_cloudfront_function" "api-url-rewrite-function" {
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
   count = var.waf_enabled ? 1 : 0
 
-  name  = "${var.nitric.name}-cloudfront-waf"
-  scope = "CLOUDFRONT"
+  name   = "${var.nitric.name}-cloudfront-waf"
+  scope  = "CLOUDFRONT"
+  region = "us-east-1"
 
   default_action {
     allow {}
