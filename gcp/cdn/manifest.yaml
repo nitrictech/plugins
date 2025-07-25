@@ -6,5 +6,11 @@ deployment:
   terraform: ./module
 
 inputs:
+  project_id:
+    type: string
+  region:
+    type: string
+  cdn_domain:
+    type: object
 
 outputs:

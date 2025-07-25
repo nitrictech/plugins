@@ -7,5 +7,9 @@ deployment:
   terraform: ./module
 
 inputs:
+  trusted_actions:
+    type: list(string)
+  project_id:
+    type: string
 
 outputs:
