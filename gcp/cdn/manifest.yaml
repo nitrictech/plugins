@@ -1,0 +1,10 @@
+name: gcp-cdn
+type: entrypoint
+icon: ./icon.svg
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: ./module
+
+inputs:
+
+outputs:
