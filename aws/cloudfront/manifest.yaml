@@ -3,5 +3,19 @@ type: entrypoint
 icon: ./icon.svg
 deployment:
   terraform: ./module
-inputs: {}
+
+inputs:
+  waf_enabled:
+    type: bool
+  waf_managed_rules:
+    type: list(object)
+  geo_restriction_type:
+    type: string
+  geo_restriction_locations:
+    type: list(string)
+  rate_limit_enabled:
+    type: bool
+  rate_limit_requests_per_5min:
+    type: number
+
 outputs: {}
