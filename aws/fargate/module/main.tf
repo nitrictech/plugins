@@ -95,7 +95,7 @@ resource "aws_ecs_task_definition" "service" {
   cpu                      = var.cpu
   memory                   = var.memory
   execution_role_arn       = aws_iam_role.task_execution_role.arn
-  task_role_arn            = var.nitric.identities["aws:iam:role"].role.arn
+  task_role_arn            = var.nitric.identities["aws:iam:role"].exports["aws_iam_role:arn"]
   container_definitions = jsonencode([
     {
       name      = "main"

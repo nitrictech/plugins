@@ -53,7 +53,7 @@ resource "aws_s3_object" "files" {
 resource "aws_iam_role_policy" "access_policy" {
   for_each = var.nitric.services
   name     = "${local.normalized_nitric_name}-${provider::corefunc::str_kebab(each.key)}"
-  role     = each.value.identities["aws:iam:role"].role.name
+  role     = each.value.identities["aws:iam:role"].exports["aws_iam_role:name"]
 
 
   # Terraform's "jsonencode" function converts a

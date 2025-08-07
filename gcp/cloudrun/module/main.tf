@@ -122,7 +122,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
       env {
         name  = "SERVICE_ACCOUNT_EMAIL"
-        value = var.nitric.identities["gcp:iam:role"].role
+        value = var.nitric.identities["gcp:iam:role"].exports["gcp_service_account:email"]
       }
       env {
         name  = "GCP_REGION"
@@ -138,7 +138,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
     }
 
-    service_account = var.nitric.identities["gcp:iam:role"].role
+    service_account = var.nitric.identities["gcp:iam:role"].exports["gcp_service_account:email"]
     timeout         = "${var.timeout_seconds}s"
   }
 
