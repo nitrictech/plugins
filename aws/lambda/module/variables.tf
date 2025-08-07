@@ -8,7 +8,9 @@ variable "nitric" {
       path            = string
     })), {})
     env        = map(string)
-    identities = map(any)
+    identities = map(object({
+      exports = map(string)
+    }))
   })
 }
 

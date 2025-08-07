@@ -6,8 +6,7 @@ variable "nitric" {
     services = map(object({
       actions = list(string)
       identities = map(object({
-        id   = string
-        role = any
+        exports = map(string)
       }))
     }))
   })

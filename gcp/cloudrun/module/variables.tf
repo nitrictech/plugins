@@ -4,7 +4,9 @@ variable "nitric" {
     stack_id   = string
     image_id   = string
     env        = map(string)
-    identities = map(any)
+    identities = map(object({
+      exports = map(string)
+    }))
   })
 }
 
