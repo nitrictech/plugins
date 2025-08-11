@@ -5,7 +5,9 @@ variable "nitric" {
     env_var_key = string
     services = map(object({
       actions = list(string)
-      identities = map(string)
+      identities = map(object({
+        exports = map(string)
+      }))
     }))
   })
 }
