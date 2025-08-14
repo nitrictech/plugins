@@ -8,3 +8,9 @@ output "nitric" {
         }
     } 
 }
+
+output "connection_string" {
+    value = neon_endpoint.endpoint.connection_string
+    sensitive = true
+    description = "The connection string for the Neon database endpoint"
+}
