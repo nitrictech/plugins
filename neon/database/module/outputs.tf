@@ -10,7 +10,7 @@ output "nitric" {
 }
 
 output "connection_string" {
-    value = neon_endpoint.endpoint.connection_string
+    value = local.neon_connection_string
     sensitive = true
     description = "The connection string for the Neon database endpoint"
 }
