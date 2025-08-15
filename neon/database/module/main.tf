@@ -42,7 +42,7 @@ resource "neon_branch" "branch" {
 }
 
 data "neon_branch_endpoints" "endpoints" {
-  count = var.branch_id != null ? 0 : 1
+  count = var.branch_id != null ? 1 : 0
 
   project_id = local.neon_project_id
   branch_id  = local.neon_branch_id
