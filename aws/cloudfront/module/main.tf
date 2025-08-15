@@ -260,7 +260,7 @@ resource "aws_route53_record" "cert_validation" {
 # Wait for certificate validation to complete
 resource "aws_acm_certificate_validation" "cloudfront_cert" {
   count                   = var.custom_domain != null ? 1 : 0
-  provider                = aws.us-east-1
+  region                  = "us-east-1"
   certificate_arn         = aws_acm_certificate.cloudfront_cert[0].arn
   validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
 }
