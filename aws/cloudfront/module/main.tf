@@ -200,9 +200,75 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   }
 }
 
+
+# Extract parent domain by removing first subdomain
+locals {
+  domain_parts = split(".", var.custom_domain)
+  parent_domain = join(".", slice(local.domain_parts, 1, length(local.domain_parts)))
+}
+
+# Lookup the parent hosted zone
+data "aws_route53_zone" "parent" {
+  count        = var.custom_domain != null ? 1 : 0
+  name         = "${local.parent_domain}."
+}
+
+# Create Route53 A record for the custom domain
+resource "aws_route53_record" "cloudfront_alias" {
+  count   = var.custom_domain != null ? 1 : 0
+  zone_id = data.aws_route53_zone.parent[0].zone_id
+  name    = var.custom_domain
+  type    = "A"
+  alias {
+    name                   = aws_cloudfront_distribution.distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+# Request ACM certificate for custom domain
+resource "aws_acm_certificate" "cloudfront_cert" {
+  count                     = var.custom_domain != null ? 1 : 0
+  region                   = "us-east-1"  # CloudFront requires certificates in us-east-1
+  domain_name              = var.custom_domain
+  validation_method        = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Create DNS validation records
+resource "aws_route53_record" "cert_validation" {
+  for_each = var.custom_domain != null ? {
+    for dvo in aws_acm_certificate.cloudfront_cert[0].domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      value  = dvo.resource_record_value
+    }
+  } : {}
+  
+  zone_id = data.aws_route53_zone.parent[0].zone_id
+  name    = each.value.name
+  type    = each.value.type
+  records = [each.value.value]
+  ttl     = 60
+  
+  allow_overwrite = true
+}
+
+# Wait for certificate validation to complete
+resource "aws_acm_certificate_validation" "cloudfront_cert" {
+  count                   = var.custom_domain != null ? 1 : 0
+  provider                = aws.us-east-1
+  certificate_arn         = aws_acm_certificate.cloudfront_cert[0].arn
+  validation_record_fqdns = [for record in aws_route53_record.cert_validation : record.fqdn]
+}
+
 resource "aws_cloudfront_distribution" "distribution" {
   enabled = true
   web_acl_id = var.waf_enabled ? aws_wafv2_web_acl.cloudfront_waf[0].arn : null
+  aliases = var.custom_domain != null ? [var.custom_domain] : []
 
   dynamic "origin" {
     for_each = local.non_vpc_origins
@@ -294,6 +360,9 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    cloudfront_default_certificate = var.custom_domain == null ? true : false
+    acm_certificate_arn            = var.custom_domain != null ? aws_acm_certificate_validation.cloudfront_cert[0].certificate_arn : null
+    ssl_support_method             = var.custom_domain != null ? "sni-only" : null
+    minimum_protocol_version       = var.custom_domain != null ? "TLSv1.2_2021" : null
   }
 }

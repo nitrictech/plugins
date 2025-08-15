@@ -14,6 +14,13 @@ variable "nitric" {
   })
 }
 
+variable "custom_domain" {
+  description = "Custom domain name for CloudFront distribution"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
 variable "waf_enabled" {
   description = "Enable AWS WAF for CloudFront distribution"
   type        = bool

@@ -19,27 +19,53 @@ locals {
     }
 }
 
+data "neon_project" "existing_project" {
+  count = var.project_id != null ? 0 : 1
+  id = var.project_id
+}
+
 resource "neon_project" "project" {
   count = var.project_id == null ? 1 : 0
   name = "${var.nitric.stack_id}-${var.nitric.name}"
 }
 
+locals {
+  default_branch_id = one(data.neon_project.existing_project) != null ? one(data.neon_project.existing_project).default_branch_id : neon_project.project[0].default_branch_id
+  parent_branch_id = var.project_id != null && var.parent_branch_id != null ? var.parent_branch_id : local.default_branch_id
+}
+
 resource "neon_branch" "branch" {
   count = var.branch_id == null ? 1 : 0
   project_id = local.neon_project_id
+  parent_id  = local.parent_branch_id
   name       = "${var.nitric.stack_id}-${var.nitric.name}"
 }
 
+data "neon_branch_endpoints" "endpoints" {
+  count = var.branch_id != null ? 0 : 1
+
+  project_id = local.neon_project_id
+  branch_id  = local.neon_branch_id
+}
 
 resource "neon_endpoint" "endpoint" {
-  # count = var.existing.endpoint_id == null ? 1 : 0
+  count = var.branch_id == null ? 1 : 0
+
+  autoscaling_limit_min_cu = var.auto_scaling_limit_min_cu
+  autoscaling_limit_max_cu = var.auto_scaling_limit_max_cu
 
   project_id = local.neon_project_id
   branch_id  = local.neon_branch_id
   type       = "read_write"
 }
+
+locals {
+  existing_neon_endpoint = one(data.neon_branch_endpoints.endpoints) != null ? [for e in one(data.neon_branch_endpoints.endpoints).endpoints : e if e.type == "read_write"][0] : null
+  neon_endpoint_id = var.branch_id != null ? var.branch_id : (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.id : neon_endpoint.endpoint[0].id)
+}
+
+# TODO: If a database already exists, reuse its existing owner role
 resource "neon_role" "role" {
-  # count = var.existing.role_name == null ? 1 : 0
   project_id = local.neon_project_id
   branch_id  = local.neon_branch_id
   name       = "${var.nitric.stack_id}-${var.nitric.name}"
@@ -47,23 +73,10 @@ resource "neon_role" "role" {
   depends_on = [ neon_endpoint.endpoint ]
 }
 
+# TODO: Reuse existing database if it exists
 resource "neon_database" "database" {
-  # count = var.existing.database_name == null ? 1 : 0
   project_id = local.neon_project_id
   branch_id  = local.neon_branch_id
   name       = local.neon_database_name
   owner_name = neon_role.role.name
 }
-
-
-
-# data "neon_branch_endpoints" "endpoints" {
-#   project_id = local.neon_project_id
-#   branch_id  = local.neon_branch_id
-# }
-
-# data "neon_branch_role_password" "password" {
-#   project_id = local.neon_project_id
-#   branch_id  = local.neon_branch_id
-#   role_name  = local.neon_role_name
-# }
