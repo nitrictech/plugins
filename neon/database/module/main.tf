@@ -30,7 +30,7 @@ resource "neon_project" "project" {
 }
 
 locals {
-  default_branch_id = one(data.neon_project.existing_project) != null ? one(data.neon_project.existing_project).default_branch_id : neon_project.project[0].default_branch_id
+  default_branch_id = var.project_id != null ? one(data.neon_project.existing_project).default_branch_id : neon_project.project[0].default_branch_id
   parent_branch_id = var.project_id != null && var.parent_branch_id != null ? var.parent_branch_id : local.default_branch_id
 }
 
