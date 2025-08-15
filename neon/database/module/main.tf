@@ -7,7 +7,7 @@ locals {
     # neon_host_name =  [for e in data.neon_branch_endpoints.endpoints.endpoints : e.host_name if e.id == local.neon_endpoint_id][0]
     # neon_database_name = var.existing.database_name == null ? "${var.nitric.stack_id}-${var.nitric.name}" : var.existing.database_name
     neon_database_name = "${var.nitric.stack_id}-${var.nitric.name}"
-    neon_connection_string = "postgresql://${neon_role.role.name}:${neon_role.role.password}@${neon_endpoint.endpoint.host}/${local.neon_database_name}?sslmode=require"
+    neon_connection_string = "postgresql://${neon_role.role.name}:${neon_role.role.password}@${local.neon_endpoint_host}/${local.neon_database_name}?sslmode=require"
 
     # Output service export map
     service_outputs = {
@@ -62,6 +62,7 @@ resource "neon_endpoint" "endpoint" {
 locals {
   existing_neon_endpoint = one(data.neon_branch_endpoints.endpoints) != null ? [for e in one(data.neon_branch_endpoints.endpoints).endpoints : e if e.type == "read_write"][0] : null
   neon_endpoint_id = var.branch_id != null ? var.branch_id : (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.id : neon_endpoint.endpoint[0].id)
+  neon_endpoint_host = var.branch_id != null ? var.branch_id : (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.host : neon_endpoint.endpoint[0].host)
 }
 
 # TODO: If a database already exists, reuse its existing owner role
