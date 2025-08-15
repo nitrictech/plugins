@@ -1,6 +1,6 @@
 output "nitric" {
     value = {
-        id          = neon_endpoint.endpoint.id
+        id          = local.neon_endpoint_id
         exports = {
             # Export known service outputs
             services = local.service_outputs
