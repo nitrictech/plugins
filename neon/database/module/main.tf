@@ -71,7 +71,7 @@ resource "neon_role" "role" {
   branch_id  = local.neon_branch_id
   name       = "${var.nitric.stack_id}-${var.nitric.name}"
 
-  depends_on = [ neon_endpoint.endpoint ]
+  depends_on = [ local.neon_endpoint_id ]
 }
 
 # TODO: Reuse existing database if it exists
