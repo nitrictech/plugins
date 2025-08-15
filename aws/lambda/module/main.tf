@@ -80,7 +80,8 @@ resource "aws_lambda_function" "function" {
   }
   environment {
     variables = merge(var.environment, var.nitric.env, {
-      NITRIC_STACK_ID = var.nitric.stack_id
+      NITRIC_STACK_ID = var.nitric.stack_id,
+      PORT = "8080",
     })
   }
 
