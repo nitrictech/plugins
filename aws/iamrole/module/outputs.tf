@@ -1,4 +1,4 @@
-output "nitric" {
+output "suga" {
   value = {
     exports = {
       "aws_iam_role"  = aws_iam_role.role.arn

@@ -1,23 +1,23 @@
 locals {
   s3_origin_id = "publicOrigin"
   default_origin = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if v.path == "/"
   }
   s3_bucket_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if contains(keys(v.resources), "aws_s3_bucket")
   }
   lambda_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if contains(keys(v.resources), "aws_lambda_function")
   }
   non_vpc_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if !contains(keys(v.resources), "aws_lb")
   }
   vpc_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if contains(keys(v.resources), "aws_lb")
   }
 }
@@ -115,17 +115,17 @@ resource "aws_s3_bucket_policy" "allow_bucket_access" {
 resource "aws_cloudfront_function" "api-url-rewrite-function" {
   name    = "api-url-rewrite-function"
   runtime = "cloudfront-js-1.0"
-  comment = "Rewrite API URLs routed to Nitric services"
+  comment = "Rewrite API URLs routed to Suga services"
   publish = true
   code    = templatefile("${path.module}/scripts/url-rewrite.js", {
-    base_paths = join(",", [for k, v in var.nitric.origins : v.path])
+    base_paths = join(",", [for k, v in var.suga.origins : v.path])
   })
 }
 
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
   count = var.waf_enabled ? 1 : 0
 
-  name   = "${var.nitric.name}-cloudfront-waf"
+  name   = "${var.suga.name}-cloudfront-waf"
   scope  = "CLOUDFRONT"
   region = "us-east-1"
 
@@ -195,7 +195,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
   visibility_config {
     cloudwatch_metrics_enabled = true
-    metric_name                = "${var.nitric.name}-cloudfront-waf"
+    metric_name                = "${var.suga.name}-cloudfront-waf"
     sampled_requests_enabled   = true
   }
 }
@@ -310,7 +310,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   dynamic "ordered_cache_behavior" {
     for_each = {
-      for k, v in var.nitric.origins : k => v
+      for k, v in var.suga.origins : k => v
       if v.path != "/"
     }
 

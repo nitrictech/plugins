@@ -11,9 +11,9 @@ locals {
 
     # Output service export map
     service_outputs = {
-        for name, service in var.nitric.services : name => {
+        for name, service in var.suga.services : name => {
             env = {
-                (var.nitric.env_var_key) = local.neon_connection_string
+                (var.suga.env_var_key) = local.neon_connection_string
             }
         }
     }
@@ -26,7 +26,7 @@ data "neon_project" "existing_project" {
 
 resource "neon_project" "project" {
   count = var.project_id == null ? 1 : 0
-  name = "${var.nitric.stack_id}-${var.nitric.name}"
+  name = "${var.suga.stack_id}-${var.suga.name}"
 }
 
 locals {
@@ -38,7 +38,7 @@ resource "neon_branch" "branch" {
   count = var.branch_id == null ? 1 : 0
   project_id = local.neon_project_id
   parent_id  = local.parent_branch_id
-  name       = "${var.nitric.stack_id}-${var.nitric.name}"
+  name       = "${var.suga.stack_id}-${var.suga.name}"
 }
 
 data "neon_branch_endpoints" "endpoints" {
@@ -69,7 +69,7 @@ locals {
 resource "neon_role" "role" {
   project_id = local.neon_project_id
   branch_id  = local.neon_branch_id
-  name       = "${var.nitric.stack_id}-${var.nitric.name}"
+  name       = "${var.suga.stack_id}-${var.suga.name}"
 
   depends_on = [ local.neon_endpoint_id ]
 }

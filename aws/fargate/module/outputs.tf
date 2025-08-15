@@ -1,4 +1,4 @@
-output "nitric" {
+output "suga" {
   value = {
     id          = aws_ecs_service.service.id
     domain_name = data.aws_lb.alb.dns_name

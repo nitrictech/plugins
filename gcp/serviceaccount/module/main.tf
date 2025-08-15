@@ -17,7 +17,7 @@ resource "google_project_service" "required_services" {
 }
 
 locals {
-  service_account_name = "${substr("nitric-${provider::corefunc::str_kebab(var.nitric.name)}", 0, 20)}-${var.nitric.stack_id}"
+  service_account_name = "${substr("suga-${provider::corefunc::str_kebab(var.nitric.name)}", 0, 20)}-${var.nitric.stack_id}"
 }
 
 # Create a service account for the google cloud run instance

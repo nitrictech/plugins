@@ -36,21 +36,21 @@ import (
 
 	"github.com/ettle/strcase"
 	storagepb "github.com/nitrictech/nitric/proto/storage/v2"
-	nitricStorage "github.com/nitrictech/nitric/runtime/storage"
+	sugaStorage "github.com/nitrictech/nitric/runtime/storage"
 )
 
 type cloudStorage struct {
 	storagepb.UnimplementedStorageServer
-	nitricStackId string
-	projectID     string
-	cache         map[string]*storage.BucketHandle
-	client        *storage.Client
+	sugaStackId string
+	projectID   string
+	cache       map[string]*storage.BucketHandle
+	client      *storage.Client
 }
 
 var _ storagepb.StorageServer = &cloudStorage{}
 
 func (s *cloudStorage) getBucketByName(bucket string) (*storage.BucketHandle, error) {
-	bucketName := fmt.Sprintf("%s-%s", strcase.ToKebab(bucket), s.nitricStackId)
+	bucketName := fmt.Sprintf("%s-%s", strcase.ToKebab(bucket), s.sugaStackId)
 	if s.cache == nil {
 		buckets := s.client.Buckets(context.Background(), s.projectID)
 		s.cache = make(map[string]*storage.BucketHandle)
@@ -279,12 +279,12 @@ func (s *cloudStorage) Exists(ctx context.Context, req *storagepb.StorageExistsR
 /**
  * Creates a new Storage Plugin for use in GCP
  */
-func Plugin() (nitricStorage.Storage, error) {
+func Plugin() (sugaStorage.Storage, error) {
 	ctx := context.Background()
 
-	nitricStackId := os.Getenv("NITRIC_STACK_ID")
-	if nitricStackId == "" {
-		return nil, fmt.Errorf("NITRIC_STACK_ID is not set")
+	sugaStackId := os.Getenv("SUGA_STACK_ID")
+	if sugaStackId == "" {
+		return nil, fmt.Errorf("SUGA_STACK_ID is not set")
 	}
 
 	credentials, credentialsError := google.FindDefaultCredentials(ctx,
@@ -303,8 +303,8 @@ func Plugin() (nitricStorage.Storage, error) {
 	}
 
 	return &cloudStorage{
-		client:        client,
-		projectID:     credentials.ProjectID,
-		nitricStackId: nitricStackId,
+		client:      client,
+		projectID:   credentials.ProjectID,
+		sugaStackId: sugaStackId,
 	}, nil
 }

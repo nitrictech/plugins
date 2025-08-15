@@ -30,7 +30,7 @@ func (a *awsfargateService) Start(proxy service.Proxy) error {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", p.ServeHTTP)
-	mux.HandleFunc("/x-nitric-health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("/x-suga-health", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Recieved Health check")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

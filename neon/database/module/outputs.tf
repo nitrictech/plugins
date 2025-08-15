@@ -1,4 +1,4 @@
-output "nitric" {
+output "suga" {
     value = {
         id          = local.neon_endpoint_id
         exports = {

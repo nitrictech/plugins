@@ -1,13 +1,13 @@
 # Create an ECR repository
 resource "aws_ecr_repository" "repo" {
-  name = var.nitric.name
+  name = var.suga.name
 }
 
 data "aws_ecr_authorization_token" "ecr_auth" {
 }
 
 data "docker_image" "latest" {
-  name = var.nitric.image_id
+  name = var.suga.image_id
 }
 
 # Tag the provided docker image with the ECR repository url
@@ -31,7 +31,7 @@ resource "docker_registry_image" "push" {
 
 # Create IAM role for ECS task execution
 resource "aws_iam_role" "task_execution_role" {
-  name = "${var.nitric.stack_id}-${var.nitric.name}-execution"
+  name = "${var.suga.stack_id}-${var.suga.name}-execution"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -55,7 +55,7 @@ resource "aws_iam_role_policy_attachment" "task_execution_policy" {
 
 # Add ECR access policy
 resource "aws_iam_role_policy" "task_execution_ecr_policy" {
-  name = "${var.nitric.stack_id}-${var.nitric.name}-ecr"
+  name = "${var.suga.stack_id}-${var.suga.name}-ecr"
   role = aws_iam_role.task_execution_role.id
 
   policy = jsonencode({
@@ -84,18 +84,18 @@ data "aws_region" "current" {
 
 # Create a CloudWatch log group
 resource "aws_cloudwatch_log_group" "default" {
-  name = "${var.nitric.stack_id}-${var.nitric.name}"
+  name = "${var.suga.stack_id}-${var.suga.name}"
 }
 
 # Create the task definition
 resource "aws_ecs_task_definition" "service" {
-  family                   = "${var.nitric.stack_id}-${var.nitric.name}"
+  family                   = "${var.suga.stack_id}-${var.suga.name}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.cpu
   memory                   = var.memory
   execution_role_arn       = aws_iam_role.task_execution_role.arn
-  task_role_arn            = var.nitric.identities["aws:iam:role"].exports["aws_iam_role:arn"]
+  task_role_arn            = var.suga.identities["aws:iam:role"].exports["aws_iam_role:arn"]
   container_definitions = jsonencode([
     {
       name      = "main"
@@ -110,8 +110,8 @@ resource "aws_ecs_task_definition" "service" {
           value = "${tostring(var.container_port)}"
         },
         {
-          name = "NITRIC_STACK_ID"
-          value = var.nitric.stack_id
+          name = "SUGA_STACK_ID"
+          value = var.suga.stack_id
         }
       ],
       [
@@ -121,7 +121,7 @@ resource "aws_ecs_task_definition" "service" {
         }
       ],
       [
-        for k, v in var.nitric.env : {
+        for k, v in var.suga.env : {
           name  = k
           value = "${tostring(v)}"
         }
@@ -132,7 +132,7 @@ resource "aws_ecs_task_definition" "service" {
         options = {
           awslogs-group         = aws_cloudwatch_log_group.default.name
           awslogs-region        = data.aws_region.current.name
-          awslogs-stream-prefix = var.nitric.name
+          awslogs-stream-prefix = var.suga.name
         }
       }
 
@@ -148,12 +148,12 @@ resource "aws_ecs_task_definition" "service" {
 
 # Create a cluster definition for the service
 resource "aws_ecs_cluster" "cluster" {
-  name = "${var.nitric.stack_id}-${var.nitric.name}"
+  name = "${var.suga.stack_id}-${var.suga.name}"
 }
 
 # Create an ESC service for the above task definition
 resource "aws_ecs_service" "service" {
-  name = "${var.nitric.stack_id}-${var.nitric.name}"
+  name = "${var.suga.stack_id}-${var.suga.name}"
   cluster = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.service.arn
   desired_count = 1
@@ -172,7 +172,7 @@ resource "aws_ecs_service" "service" {
 
 # Create target group
 resource "aws_lb_target_group" "service" {
-  name        = "${var.nitric.stack_id}-${var.nitric.name}"
+  name        = "${var.suga.stack_id}-${var.suga.name}"
   port        = var.container_port
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -180,7 +180,7 @@ resource "aws_lb_target_group" "service" {
   target_type = "ip"
 
   health_check {
-    path = "/x-nitric-health"
+    path = "/x-suga-health"
     interval = 30
     timeout = 10
     healthy_threshold = 2
