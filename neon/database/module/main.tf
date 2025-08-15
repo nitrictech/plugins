@@ -20,7 +20,7 @@ locals {
 }
 
 data "neon_project" "existing_project" {
-  count = var.project_id != null ? 0 : 1
+  count = var.project_id != null ? 1 : 0
   id = var.project_id
 }
 
