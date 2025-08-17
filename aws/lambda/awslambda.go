@@ -91,13 +91,24 @@ func (a *awslambdaService) handleHTTPEvent(ctx context.Context, evt *events.Lamb
 	// Translate response headers to a map
 	headers := make(map[string]string)
 	for k, v := range resp.Header {
+		// Skip Set-Cookie headers as they are handled separately
+		if k == "Set-Cookie" {
+			continue
+		}
 		headers[k] = v[0]
+	}
+
+	// Extract cookies from the response using the Cookies() method
+	var cookies []string
+	for _, cookie := range resp.Cookies() {
+		cookies = append(cookies, cookie.String())
 	}
 
 	return &events.LambdaFunctionURLStreamingResponse{
 		StatusCode: resp.StatusCode,
 		Body:       resp.Body,
 		Headers:    headers,
+		Cookies:    cookies,
 	}, nil
 }
 
