@@ -281,7 +281,8 @@ resource "aws_cloudfront_distribution" "distribution" {
       origin_path = origin.value.base_path
 
       dynamic "custom_origin_config" {
-        for_each = !contains(keys(origin.value.resources), "aws_s3_bucket") ? [1] : []
+        # Lambda functions with OAC should not have custom_origin_config
+        for_each = !contains(keys(origin.value.resources), "aws_s3_bucket") && !contains(keys(origin.value.resources), "aws_lambda_function") ? [1] : []
 
         content {
           origin_read_timeout = 30
@@ -327,12 +328,20 @@ resource "aws_cloudfront_distribution" "distribution" {
       # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-origin-cache-headers
       # Use AWS managed cache policy - UseOriginCacheHeaders
       # This policy honors the cache headers from the origin
-      cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+      # cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
       
       # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
       # Use AWS managed origin request policy - AllViewer
       # This forwards all headers, query strings, and cookies to the origin
-      origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+      # origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+
+      forwarded_values {
+        query_string = true
+        cookies {
+          forward = "all"
+        }
+        headers = ["Authorization"]
+      }
 
       viewer_protocol_policy = "https-only"
     }
@@ -344,13 +353,21 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = "${keys(local.default_origin)[0]}"
     viewer_protocol_policy = "redirect-to-https"
 
+    forwarded_values {
+      query_string = true
+      cookies {
+        forward = "all"
+      }
+      headers = ["Authorization"]
+    }
+
     # Use AWS managed cache policy - UseOriginCacheHeaders
     # This policy honors the cache headers from the origin
-    cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+    # cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
     
     # Use AWS managed origin request policy - AllViewer
     # This forwards all headers, query strings, and cookies to the origin
-    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+    # origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
   }
 
   restrictions {
@@ -366,4 +383,8 @@ resource "aws_cloudfront_distribution" "distribution" {
     ssl_support_method             = var.custom_domain != null ? "sni-only" : null
     minimum_protocol_version       = var.custom_domain != null ? "TLSv1.2_2021" : null
   }
+
+  depends_on = [
+    aws_lambda_permission.allow_cloudfront_to_execute_lambda
+  ]
 }
