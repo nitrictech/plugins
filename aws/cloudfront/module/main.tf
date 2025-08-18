@@ -324,10 +324,12 @@ resource "aws_cloudfront_distribution" "distribution" {
       cached_methods = ["GET","HEAD","OPTIONS"]
       target_origin_id = "${ordered_cache_behavior.key}"
 
+      # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html#managed-cache-policy-origin-cache-headers
       # Use AWS managed cache policy - UseOriginCacheHeaders
       # This policy honors the cache headers from the origin
       cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
       
+      # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
       # Use AWS managed origin request policy - AllViewer
       # This forwards all headers, query strings, and cookies to the origin
       origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
