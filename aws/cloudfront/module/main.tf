@@ -282,7 +282,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
       dynamic "custom_origin_config" {
         # Lambda functions with OAC should not have custom_origin_config
-        for_each = !contains(keys(origin.value.resources), "aws_s3_bucket") && !contains(keys(origin.value.resources), "aws_lambda_function") ? [1] : []
+        for_each = !contains(keys(origin.value.resources), "aws_s3_bucket") ? [1] : []
 
         content {
           origin_read_timeout = 30
