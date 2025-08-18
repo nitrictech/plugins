@@ -329,19 +329,23 @@ resource "aws_cloudfront_distribution" "distribution" {
       # Use AWS managed cache policy - UseOriginCacheHeaders
       # This policy honors the cache headers from the origin
       # cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+      # FIXME: Disabling cache policy for now
+      # as adding origin cache headers appears to cause issues with Lambda function URLs
+      cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
       
       # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
       # Use AWS managed origin request policy - AllViewer
       # This forwards all headers, query strings, and cookies to the origin
-      # origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+      origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
 
-      forwarded_values {
-        query_string = true
-        cookies {
-          forward = "all"
-        }
-        headers = ["Authorization"]
-      }
+      # Legacy configuration for custom cache behavior
+      # forwarded_values {
+      #   query_string = true
+      #   cookies {
+      #     forward = "all"
+      #   }
+      #   headers = ["Authorization"]
+      # }
 
       viewer_protocol_policy = "https-only"
     }
@@ -353,21 +357,25 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = "${keys(local.default_origin)[0]}"
     viewer_protocol_policy = "redirect-to-https"
 
-    forwarded_values {
-      query_string = true
-      cookies {
-        forward = "all"
-      }
-      headers = ["Authorization"]
-    }
+    # Legacy configuration for custom cache behavior
+    # forwarded_values {
+    #   query_string = true
+    #   cookies {
+    #     forward = "all"
+    #   }
+    #   headers = ["Authorization"]
+    # }
 
     # Use AWS managed cache policy - UseOriginCacheHeaders
     # This policy honors the cache headers from the origin
     # cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+    # FIXME: Disabling cache policy for now
+    # as adding origin cache headers appears to cause issues with Lambda function URLs
+    cache_policy_id = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
     
     # Use AWS managed origin request policy - AllViewer
     # This forwards all headers, query strings, and cookies to the origin
-    # origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
   }
 
   restrictions {
