@@ -332,7 +332,7 @@ resource "aws_cloudfront_distribution" "distribution" {
       # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
       # Use AWS managed origin request policy - AllViewer
       # This forwards all headers, query strings, and cookies to the origin
-      origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+      origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
 
       viewer_protocol_policy = "https-only"
     }
@@ -350,7 +350,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     
     # Use AWS managed origin request policy - AllViewer
     # This forwards all headers, query strings, and cookies to the origin
-    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
   }
 
   restrictions {
