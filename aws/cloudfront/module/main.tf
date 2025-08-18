@@ -383,8 +383,4 @@ resource "aws_cloudfront_distribution" "distribution" {
     ssl_support_method             = var.custom_domain != null ? "sni-only" : null
     minimum_protocol_version       = var.custom_domain != null ? "TLSv1.2_2021" : null
   }
-
-  depends_on = [
-    aws_lambda_permission.allow_cloudfront_to_execute_lambda
-  ]
 }
