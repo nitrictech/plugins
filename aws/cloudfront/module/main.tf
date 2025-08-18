@@ -326,6 +326,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
       forwarded_values {
         query_string = true
+        headers = ["*"]
         cookies {
           forward = "all"
         }
@@ -346,6 +347,7 @@ resource "aws_cloudfront_distribution" "distribution" {
 
     forwarded_values {
       query_string = true
+      headers = ["*"]
       cookies {
         forward = "all"
       }
