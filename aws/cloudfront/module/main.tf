@@ -324,13 +324,13 @@ resource "aws_cloudfront_distribution" "distribution" {
       cached_methods = ["GET","HEAD","OPTIONS"]
       target_origin_id = "${ordered_cache_behavior.key}"
 
-      forwarded_values {
-        query_string = true
-        headers = ["*"]
-        cookies {
-          forward = "all"
-        }
-      }
+      # Use AWS managed cache policy - UseOriginCacheHeaders
+      # This policy honors the cache headers from the origin
+      cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+      
+      # Use AWS managed origin request policy - AllViewer
+      # This forwards all headers, query strings, and cookies to the origin
+      origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
 
       viewer_protocol_policy = "https-only"
     }
@@ -341,17 +341,14 @@ resource "aws_cloudfront_distribution" "distribution" {
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = "${keys(local.default_origin)[0]}"
     viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
 
-    forwarded_values {
-      query_string = true
-      headers = ["*"]
-      cookies {
-        forward = "all"
-      }
-    }
+    # Use AWS managed cache policy - UseOriginCacheHeaders
+    # This policy honors the cache headers from the origin
+    cache_policy_id = "83da9c7e-98b4-4e11-a168-04f0df8e2c65"
+    
+    # Use AWS managed origin request policy - AllViewer
+    # This forwards all headers, query strings, and cookies to the origin
+    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
   }
 
   restrictions {
