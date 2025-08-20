@@ -21,6 +21,12 @@ variable "custom_domain" {
   default     = null
 }
 
+variable "custom_domain_is_root" {
+  description = "Indicates if the custom domain is the root domain for the purposes of hosted zone lookup and record creation"
+  type        = bool
+  default     = false
+}
+
 variable "waf_enabled" {
   description = "Enable AWS WAF for CloudFront distribution"
   type        = bool

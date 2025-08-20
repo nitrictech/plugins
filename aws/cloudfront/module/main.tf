@@ -201,16 +201,17 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 }
 
 
-# Extract parent domain by removing first subdomain
+# Determine the hosted zone domain based on whether custom_domain is root
 locals {
   domain_parts = split(".", var.custom_domain)
-  parent_domain = join(".", slice(local.domain_parts, 1, length(local.domain_parts)))
+  # If custom_domain_is_root is true, use the domain itself; otherwise extract parent domain
+  hosted_zone_domain = var.custom_domain_is_root ? var.custom_domain : join(".", slice(local.domain_parts, 1, length(local.domain_parts)))
 }
 
-# Lookup the parent hosted zone
+# Lookup the hosted zone
 data "aws_route53_zone" "parent" {
   count        = var.custom_domain != null ? 1 : 0
-  name         = "${local.parent_domain}."
+  name         = "${local.hosted_zone_domain}."
 }
 
 # Create Route53 A record for the custom domain
