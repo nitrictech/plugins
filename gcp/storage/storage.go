@@ -35,8 +35,8 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/ettle/strcase"
-	storagepb "github.com/nitrictech/nitric/proto/storage/v2"
-	sugaStorage "github.com/nitrictech/nitric/runtime/storage"
+	storagepb "github.com/nitrictech/suga/proto/storage/v2"
+	sugaStorage "github.com/nitrictech/suga/runtime/storage"
 )
 
 type cloudStorage struct {

@@ -17,8 +17,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/smithy-go"
 	"github.com/iancoleman/strcase"
-	storagepb "github.com/nitrictech/nitric/proto/storage/v2"
-	"github.com/nitrictech/nitric/runtime/storage"
+	storagepb "github.com/nitrictech/suga/proto/storage/v2"
+	"github.com/nitrictech/suga/runtime/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

@@ -9,8 +9,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.82.0
 	github.com/aws/smithy-go v1.22.4
 	github.com/iancoleman/strcase v0.3.0
-	github.com/nitrictech/nitric/proto v0.0.0-20250815061051-6d0b850e3f5e
-	github.com/nitrictech/nitric/runtime v0.0.0-20250815061051-6d0b850e3f5e
+	github.com/nitrictech/suga/proto v0.0.0-20250820045020-5db0c162f4d8
+	github.com/nitrictech/suga/runtime v0.0.0-20250820045020-5db0c162f4d8
 	google.golang.org/grpc v1.72.0
 )
 
