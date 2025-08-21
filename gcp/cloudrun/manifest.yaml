@@ -1,0 +1,36 @@
+name: gcp-cloudrun
+type: service
+icon: ./icon.svg
+required_identities:
+  - gcp:iam:service_account
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: ./module
+runtime:
+  go_module: github.com/nitrictech/plugins/gcp/cloudrun
+
+inputs:
+  environment:
+    type: map(string)
+  memory_mb:
+    type: number
+  cpus:
+    type: number
+  gpus:
+    type: number
+  min_instances:
+    type: number
+  max_instances:
+    type: number
+  container_concurrency:
+    type: number
+  timeout_seconds:
+    type: number
+  project_id:
+    type: string
+  region:
+    type: string
+  container_port:
+    type: number
+
+outputs:

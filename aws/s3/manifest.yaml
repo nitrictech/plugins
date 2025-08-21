@@ -1,0 +1,15 @@
+name: aws-s3-bucket
+type: storage
+icon: ./icon.svg
+required_identities:
+  - aws:iam:role
+deployment:
+  terraform: ./module
+runtime:
+  go_module: github.com/nitrictech/plugins/aws/s3
+
+inputs:
+  tags:
+    type: map(string)
+
+outputs: {}

@@ -1,0 +1,13 @@
+name: neon-db
+type: database
+icon: ./icon.svg
+required_identities: []
+deployment:
+  terraform: ./module
+inputs:
+  project_id:
+    type: string
+  branch_id:
+    type: string
+
+outputs: {}

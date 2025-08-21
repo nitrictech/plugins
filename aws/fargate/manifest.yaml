@@ -1,0 +1,33 @@
+name: aws-fargate
+type: service
+icon: ./icon.svg
+required_identities:
+  - aws:iam:role
+deployment:
+  terraform: ./module
+runtime:
+  go_module: github.com/nitrictech/plugins/aws/fargate
+
+inputs:
+  container_port:
+    type: number
+    required: true
+  alb_arn:
+    type: string
+    required: true
+  alb_security_group:
+    type: string
+  cpu:
+    type: number
+  memory:
+    type: number
+  environment:
+    type: map(string)
+  vpc_id:
+    type: string
+  subnets:
+    type: list(string)
+  security_groups:
+    type: list(string)
+
+outputs: {}

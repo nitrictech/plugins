@@ -1,0 +1,17 @@
+name: gcp-storage-bucket
+type: storage
+icon: ./icon.svg
+deployment:
+  terraform: ./module
+runtime:
+  go_module: github.com/nitrictech/plugins/gcp/storage
+
+inputs:
+  project_id:
+    type: string
+  region:
+    type: string
+  storage_class:
+    type: string
+
+outputs:

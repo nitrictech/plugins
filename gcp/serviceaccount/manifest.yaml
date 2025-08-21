@@ -1,0 +1,15 @@
+name: gcp-service-account
+type: identity
+icon: ./icon.svg
+identity_type: gcp:iam:service_account
+deployment:
+  # NOTE: // is required to reference a sub-path of repository for terraform modules
+  terraform: ./module
+
+inputs:
+  trusted_actions:
+    type: list(string)
+  project_id:
+    type: string
+
+outputs:

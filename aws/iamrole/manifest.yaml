@@ -1,0 +1,13 @@
+name: aws-iam-role
+type: identity
+identity_type: aws:iam:role
+icon: ./icon.svg
+deployment:
+  terraform: ./module
+inputs:
+  trusted_services:
+    type: list(string)
+  trusted_actions:
+    type: list(string)
+
+outputs: {}
