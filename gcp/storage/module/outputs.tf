@@ -1,4 +1,4 @@
-output "nitric" {
+output "suga" {
     value = {
         id = google_storage_bucket.bucket.id
         domain_name = google_storage_bucket.bucket.url

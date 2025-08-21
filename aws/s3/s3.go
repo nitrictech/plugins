@@ -17,15 +17,15 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/smithy-go"
 	"github.com/iancoleman/strcase"
-	storagepb "github.com/nitrictech/nitric/proto/storage/v2"
-	"github.com/nitrictech/nitric/runtime/storage"
+	storagepb "github.com/nitrictech/suga/proto/storage/v2"
+	"github.com/nitrictech/suga/runtime/storage"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 type s3Storage struct {
 	storagepb.UnimplementedStorageServer
-	nitricStackId string
+	sugaStackId   string
 	s3Client      *s3.Client
 	preSignClient *s3.PresignClient
 }
@@ -34,7 +34,7 @@ func (s *s3Storage) getS3BucketName(bucket string) string {
 	normalizedBucketName := strcase.ToKebab(bucket)
 
 	// We want to build the bucket name from convention
-	return fmt.Sprintf("%s-%s", s.nitricStackId, normalizedBucketName)
+	return fmt.Sprintf("%s-%s", s.sugaStackId, normalizedBucketName)
 }
 
 func isS3AccessDeniedErr(err error) bool {
@@ -198,9 +198,9 @@ func (s *s3Storage) Exists(ctx context.Context, req *storagepb.StorageExistsRequ
 }
 
 func Plugin() (storage.Storage, error) {
-	nitricStackId := os.Getenv("NITRIC_STACK_ID")
-	if nitricStackId == "" {
-		return nil, fmt.Errorf("NITRIC_STACK_ID is not set")
+	sugaStackId := os.Getenv("SUGA_STACK_ID")
+	if sugaStackId == "" {
+		return nil, fmt.Errorf("SUGA_STACK_ID is not set")
 	}
 
 	// Create a new aws s3 client
@@ -216,6 +216,6 @@ func Plugin() (storage.Storage, error) {
 	return &s3Storage{
 		s3Client:      s3Client,
 		preSignClient: preSignClient,
-		nitricStackId: nitricStackId,
+		sugaStackId:   sugaStackId,
 	}, nil
 }

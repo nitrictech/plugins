@@ -9,24 +9,24 @@ locals {
   ]
 
   root_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if v.path == "/"
   }
 
-  default_origin = length(local.root_origins) > 0 ? keys(local.root_origins)[0] : keys(var.nitric.origins)[0]
+  default_origin = length(local.root_origins) > 0 ? keys(local.root_origins)[0] : keys(var.suga.origins)[0]
 
   cloud_storage_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if contains(keys(v.resources), "google_storage_bucket")
   }
 
   cloud_run_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if contains(keys(v.resources), "google_cloud_run_v2_service")
   }
 
   other_origins = {
-    for k, v in var.nitric.origins : k => v
+    for k, v in var.suga.origins : k => v
     if !contains(keys(v.resources), "google_storage_bucket") && !contains(keys(v.resources), "google_cloud_run_v2_service")
   }
 }
@@ -261,7 +261,7 @@ resource "google_dns_record_set" "www_cdn_dns_record" {
 resource "google_certificate_manager_certificate" "cdn_cert" {
   provider    = google-beta
   name        = "cdn-cert-${random_string.cdn_prefix.result}"
-  description = "Nitric stack CDN SSL certificate"
+  description = "Suga stack CDN SSL certificate"
   scope       = "DEFAULT"
 
   managed {

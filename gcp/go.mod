@@ -5,8 +5,8 @@ go 1.24.4
 require (
 	cloud.google.com/go/storage v1.56.0
 	github.com/ettle/strcase v0.2.0
-	github.com/nitrictech/nitric/proto v0.0.0-20250815061051-6d0b850e3f5e
-	github.com/nitrictech/nitric/runtime v0.0.0-20250815061051-6d0b850e3f5e
+	github.com/nitrictech/suga/proto v0.0.0-20250820045020-5db0c162f4d8
+	github.com/nitrictech/suga/runtime v0.0.0-20250820045020-5db0c162f4d8
 	golang.org/x/oauth2 v0.30.0
 	google.golang.org/api v0.243.0
 	google.golang.org/grpc v1.74.2

@@ -1,11 +1,11 @@
 # AWS S3 bucket
 
 locals {
-  normalized_nitric_name = provider::corefunc::str_kebab(var.nitric.name)
+  normalized_suga_name = provider::corefunc::str_kebab(var.suga.name)
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "${var.nitric.stack_id}-${local.normalized_nitric_name}"
+  bucket = "${var.suga.stack_id}-${local.normalized_suga_name}"
   tags   = var.tags
 }
 
@@ -20,8 +20,8 @@ locals {
   delete_actions = [
     "s3:DeleteObject",
   ]
-  relative_content_path = "${path.root}/../../../${var.nitric.content_path}"
-  content_files = var.nitric.content_path != "" ? fileset(local.relative_content_path, "**/*") : []
+  relative_content_path = "${path.root}/../../../${var.suga.content_path}"
+  content_files = var.suga.content_path != "" ? fileset(local.relative_content_path, "**/*") : []
 }
 
 # Upload each file to S3 (only if files exist)
@@ -51,8 +51,8 @@ resource "aws_s3_object" "files" {
 
 
 resource "aws_iam_role_policy" "access_policy" {
-  for_each = var.nitric.services
-  name     = "${local.normalized_nitric_name}-${provider::corefunc::str_kebab(each.key)}"
+  for_each = var.suga.services
+  name     = "${local.normalized_suga_name}-${provider::corefunc::str_kebab(each.key)}"
   role     = each.value.identities["aws:iam:role"].exports["aws_iam_role:name"]
 
 

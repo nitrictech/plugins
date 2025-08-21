@@ -8,8 +8,8 @@ locals {
 }
 
 locals {
-  nitric_bucket_name = provider::corefunc::str_kebab(var.nitric.name)
-  bucket_name = "${local.nitric_bucket_name}-${var.nitric.stack_id}"
+  suga_bucket_name = provider::corefunc::str_kebab(var.suga.name)
+  bucket_name = "${local.suga_bucket_name}-${var.suga.stack_id}"
 }
 
 # Enable the required services
@@ -40,13 +40,13 @@ locals {
 }
 
 resource "google_project_iam_custom_role" "bucket_access_role" {
-  for_each = var.nitric.services
+  for_each = var.suga.services
 
-  role_id     = "BucketAccess_${substr("${var.nitric.name}_${each.key}", 0, 40)}_${var.nitric.stack_id}"
+  role_id     = "BucketAccess_${substr("${var.suga.name}_${each.key}", 0, 40)}_${var.suga.stack_id}"
 
   project     = var.project_id
-  title       = "${each.key} Bucket Access For ${var.nitric.name}"
-  description = "Custom role that allows access to the ${var.nitric.name} bucket"
+  title       = "${each.key} Bucket Access For ${var.suga.name}"
+  description = "Custom role that allows access to the ${var.suga.name} bucket"
   permissions = distinct(concat(
       ["storage.buckets.list", "storage.buckets.get"], // Base roles required for finding buckets
       contains(each.value.actions, "read") ? local.read_actions : [],
@@ -59,7 +59,7 @@ resource "google_project_iam_custom_role" "bucket_access_role" {
 }
 
 resource "google_project_iam_member" "iam_access" {
-  for_each = var.nitric.services
+  for_each = var.suga.services
 
   project = var.project_id
   role     = google_project_iam_custom_role.bucket_access_role[each.key].name
@@ -67,8 +67,8 @@ resource "google_project_iam_member" "iam_access" {
 }
 
 locals {
-  relative_content_path = "${path.root}/../../../${var.nitric.content_path}"
-  content_files = var.nitric.content_path != "" ? fileset(local.relative_content_path, "**/*") : []
+  relative_content_path = "${path.root}/../../../${var.suga.content_path}"
+  content_files = var.suga.content_path != "" ? fileset(local.relative_content_path, "**/*") : []
 }
 
 # Upload each file to GCP cloud storage (only if files exist)

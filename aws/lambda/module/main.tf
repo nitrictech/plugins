@@ -1,7 +1,7 @@
 # Convert standard cron expressions to AWS CloudWatch format
 locals {
   split_cron_expression = {
-    for key, schedule in var.nitric.schedules : key => split(" ", schedule.cron_expression)
+    for key, schedule in var.suga.schedules : key => split(" ", schedule.cron_expression)
   }
 
   # Apply the either-or operator rule: if DOM is *, set DOW to ?
@@ -17,7 +17,7 @@ locals {
   # Either Day-of-month or Day-of-week must be ? (either-or operator)
   # Day-of-week is 1-7 (Sunday-Saturday) instead of 0-6
   convert_cron_to_aws = {
-    for key, schedule in var.nitric.schedules : key => {
+    for key, schedule in var.suga.schedules : key => {
       cron_expression = schedule.cron_expression
       path           = schedule.path
       # Convert the standard cron expression to an AWS CloudWatch cron expression
@@ -29,18 +29,18 @@ locals {
 
 # Create an ECR repository
 resource "aws_ecr_repository" "repo" {
-  name = var.nitric.name
+  name = var.suga.name
 }
 
 data "aws_ecr_authorization_token" "ecr_auth" {
 }
 
 data "docker_image" "latest" {
-  name = var.nitric.image_id
+  name = var.suga.image_id
 }
 
 locals {
-  lambda_name = "${var.nitric.stack_id}-${var.nitric.name}"
+  lambda_name = "${var.suga.stack_id}-${var.suga.name}"
 }
 
 # Tag the provided docker image with the ECR repository url
@@ -63,14 +63,14 @@ resource "docker_registry_image" "push" {
 }
 
 resource "aws_iam_role_policy_attachment" "basic-execution" {
-  role       = var.nitric.identities["aws:iam:role"].exports["aws_iam_role:name"]
+  role       = var.suga.identities["aws:iam:role"].exports["aws_iam_role:name"]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
 # Create a lambda function using the pushed image
 resource "aws_lambda_function" "function" {
   function_name = local.lambda_name
-  role          = var.nitric.identities["aws:iam:role"].exports["aws_iam_role:arn"]
+  role          = var.suga.identities["aws:iam:role"].exports["aws_iam_role:arn"]
   image_uri     = "${aws_ecr_repository.repo.repository_url}@${docker_registry_image.push.sha256_digest}"
   package_type  = "Image"
   timeout       = var.timeout
@@ -79,8 +79,8 @@ resource "aws_lambda_function" "function" {
     size = var.ephemeral_storage
   }
   environment {
-    variables = merge(var.environment, var.nitric.env, {
-      NITRIC_STACK_ID = var.nitric.stack_id,
+    variables = merge(var.environment, var.suga.env, {
+      SUGA_STACK_ID = var.suga.stack_id
       PORT = "8080",
     })
   }
@@ -146,7 +146,7 @@ resource "aws_iam_role_policy" "role_policy" {
 
 # Create an AWS eventbridge schedule
 resource "aws_scheduler_schedule" "schedule" {
-  for_each = var.nitric.schedules
+  for_each = var.suga.schedules
   flexible_time_window {
     mode = "OFF"
   }

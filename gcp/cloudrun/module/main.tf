@@ -29,8 +29,8 @@ resource "google_project_service" "required_services" {
 resource "google_artifact_registry_repository" "service-image-repo" {
   project       = var.project_id
   location      = var.region
-  repository_id = "${var.nitric.name}-repo"
-  description   = "service images for nitric stack ${var.nitric.name}"
+  repository_id = "${var.suga.name}-repo"
+  description   = "service images for suga stack ${var.suga.name}"
   format        = "DOCKER"
 
   depends_on = [ google_project_service.required_services ]
@@ -38,12 +38,12 @@ resource "google_artifact_registry_repository" "service-image-repo" {
 
 locals {
   artifact_registry_url = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.service-image-repo.name}"
-  service_image_url = "${local.artifact_registry_url}/${var.nitric.name}"
+  service_image_url = "${local.artifact_registry_url}/${var.suga.name}"
 }
 
 # Tag the provided docker image with the repository url
 resource "docker_tag" "tag" {
-  source_image = var.nitric.image_id
+  source_image = var.suga.image_id
   target_image = local.service_image_url
 }
 
@@ -65,7 +65,7 @@ resource "docker_registry_image" "push" {
 }
 
 locals {
-  ids_prefix = "nitric-"
+  ids_prefix = "suga-"
 }
 
 # Create a random password for events that will target this service
@@ -73,13 +73,13 @@ resource "random_password" "event_token" {
   length  = 32
   special = false
   keepers = {
-    "name" = var.nitric.name
+    "name" = var.suga.name
   }
 }
 
 # Create a cloud run service
 resource "google_cloud_run_v2_service" "service" {
-  name = replace(var.nitric.name, "_", "-")
+  name = replace(var.suga.name, "_", "-")
 
   location = var.region
   project  = var.project_id
@@ -108,13 +108,13 @@ resource "google_cloud_run_v2_service" "service" {
       }
 
       env {
-        name = "NITRIC_GUEST_PORT"
+        name = "SUGA_GUEST_PORT"
         value = 8080
       }
 
       env {
-        name  = "NITRIC_STACK_ID"
-        value = var.nitric.stack_id
+        name  = "SUGA_STACK_ID"
+        value = var.suga.stack_id
       }
       env {
         name  = "EVENT_TOKEN"
@@ -122,7 +122,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
       env {
         name  = "SERVICE_ACCOUNT_EMAIL"
-        value = var.nitric.identities["gcp:iam:role"].exports["gcp_service_account:email"]
+        value = var.suga.identities["gcp:iam:role"].exports["gcp_service_account:email"]
       }
       env {
         name  = "GCP_REGION"
@@ -130,7 +130,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
 
       dynamic "env" {
-        for_each = merge(var.environment, var.nitric.env)
+        for_each = merge(var.environment, var.suga.env)
         content {
           name  = env.key
           value = env.value
@@ -138,7 +138,7 @@ resource "google_cloud_run_v2_service" "service" {
       }
     }
 
-    service_account = var.nitric.identities["gcp:iam:role"].exports["gcp_service_account:email"]
+    service_account = var.suga.identities["gcp:iam:role"].exports["gcp_service_account:email"]
     timeout         = "${var.timeout_seconds}s"
   }
 

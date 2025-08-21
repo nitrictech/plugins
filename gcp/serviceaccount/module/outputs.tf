@@ -1,4 +1,4 @@
-output "nitric" {
+output "suga" {
   value = {
     exports = {
       "gcp_service_account"  = google_service_account.service_account.email
