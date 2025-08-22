@@ -256,12 +256,14 @@ resource "aws_cloudfront_cache_policy" "default_cache_policy" {
     headers_config {
       header_behavior = "whitelist"
       # Cache reasonable headers (with the exception of the Host header as serverless platforms we use do not support it)
-      headers = [
-        "x-method-override",
-        "origin",
-        "x-http-method",
-        "x-http-method-override"
-      ]
+      headers {
+        items = [
+          "x-method-override",
+          "origin",
+          "x-http-method",
+          "x-http-method-override"
+        ]
+      }
     }
     query_strings_config {
       query_string_behavior = "all"
