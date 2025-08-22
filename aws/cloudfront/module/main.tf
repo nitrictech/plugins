@@ -240,7 +240,7 @@ resource "aws_acm_certificate" "cloudfront_cert" {
 }
 
 resource "aws_cloudfront_cache_policy" "default_cache_policy" {
-  count = var.default_cache_policy != null ? 1 : 0
+  count = var.default_cache_policy == null ? 1 : 0
   name = "SugaDefaultCachePolicy"
   comment = "Default cache policy for CloudFront distribution for Suga Applications"
 
