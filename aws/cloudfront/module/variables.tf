@@ -65,6 +65,20 @@ variable "geo_restriction_type" {
   }
 }
 
+variable "default_cache_policy" {
+  description = "Default cache policy for CloudFront distribution"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "default_origin_request_policy" {
+  description = "Default origin request policy"
+  type        = string
+  # Default cache policy AllViewerExceptHostHeader
+  default     = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+}
+
 variable "geo_restriction_locations" {
   description = "List of ISO 3166-1 alpha-2 country codes for geo restriction"
   type        = list(string)
