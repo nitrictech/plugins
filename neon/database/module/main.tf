@@ -62,7 +62,7 @@ resource "neon_endpoint" "endpoint" {
 locals {
   existing_neon_endpoint = one(data.neon_branch_endpoints.endpoints) != null ? [for e in one(data.neon_branch_endpoints.endpoints).endpoints : e if e.type == "read_write"][0] : null
   neon_endpoint_id = var.branch_id != null ? var.branch_id : (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.id : neon_endpoint.endpoint[0].id)
-  neon_endpoint_host = var.branch_id != null ? var.branch_id : (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.host : neon_endpoint.endpoint[0].host)
+  neon_endpoint_host = var.branch_id != null ? (local.existing_neon_endpoint != null ? local.existing_neon_endpoint.host : neon_endpoint.endpoint[0].host) : neon_endpoint.endpoint[0].host
 }
 
 # TODO: If a database already exists, reuse its existing owner role
