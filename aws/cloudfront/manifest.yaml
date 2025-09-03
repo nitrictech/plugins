@@ -17,5 +17,10 @@ inputs:
     type: bool
   rate_limit_requests_per_5min:
     type: number
+  default_cache_policy_id:
+    type: string
+    nullable: true
+  default_origin_request_policy_id:
+    type: string
 
 outputs: {}

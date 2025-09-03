@@ -65,14 +65,14 @@ variable "geo_restriction_type" {
   }
 }
 
-variable "default_cache_policy" {
+variable "default_cache_policy_id" {
   description = "Default cache policy for CloudFront distribution"
   type        = string
   nullable    = true
   default     = null
 }
 
-variable "default_origin_request_policy" {
+variable "default_origin_request_policy_id" {
   description = "Default origin request policy"
   type        = string
   # Default cache policy AllViewerExceptHostHeader

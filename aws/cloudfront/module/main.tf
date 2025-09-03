@@ -240,7 +240,7 @@ resource "aws_acm_certificate" "cloudfront_cert" {
 }
 
 resource "aws_cloudfront_cache_policy" "default_cache_policy" {
-  count = var.default_cache_policy == null ? 1 : 0
+  count = var.default_cache_policy_id == null ? 1 : 0
   name = "SugaDefaultCachePolicy"
   comment = "Default cache policy for CloudFront distribution for Suga Applications"
 
@@ -275,7 +275,7 @@ resource "aws_cloudfront_cache_policy" "default_cache_policy" {
 }
 
 locals {
-  default_cache_policy_id = var.default_cache_policy != null ? var.default_cache_policy : aws_cloudfront_cache_policy.default_cache_policy[0].id
+  default_cache_policy_id = var.default_cache_policy_id != null ? var.default_cache_policy_id : aws_cloudfront_cache_policy.default_cache_policy[0].id
 }
 
 # Create DNS validation records
@@ -376,7 +376,7 @@ resource "aws_cloudfront_distribution" "distribution" {
       # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html#managed-origin-request-policy-all-viewer
       # Use AWS managed origin request policy - AllViewer
       # This forwards all headers, query strings, and cookies to the origin
-      origin_request_policy_id = var.default_origin_request_policy
+      origin_request_policy_id = var.default_origin_request_policy_id
 
       # Legacy configuration for custom cache behavior
       # forwarded_values {
