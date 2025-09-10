@@ -82,8 +82,9 @@ func (a *awslambdaService) handleHTTPEvent(ctx context.Context, evt *events.Lamb
 	}
 
 	// Preserve auth header for lambdas and other OAC dependent services
-	if evt.Headers["X-Forwarded-Auth"] != "" {
-		req.Header.Add("Authorization", evt.Headers["X-Forwarded-Auth"])
+	// lambda headers are always lowercase: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/functions-event-structure.html
+	if auth, ok := evt.Headers["x-forwarded-auth"]; ok {
+		req.Header.Add("Authorization", auth)
 	}
 
 	req.URL.RawQuery = evt.RawQueryString

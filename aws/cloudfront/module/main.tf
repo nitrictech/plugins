@@ -202,10 +202,11 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
 
 # Determine the hosted zone domain based on whether custom_domain is root
+# Determine the hosted zone domain based on whether custom_domain is root
 locals {
-  domain_parts = split(".", var.custom_domain)
+  domain_parts = try(split(".", var.custom_domain), null)
   # If custom_domain_is_root is true, use the domain itself; otherwise extract parent domain
-  hosted_zone_domain = var.custom_domain_is_root ? var.custom_domain : join(".", slice(local.domain_parts, 1, length(local.domain_parts)))
+  hosted_zone_domain = try(var.custom_domain_is_root ? var.custom_domain : join(".", slice(local.domain_parts, 1, length(local.domain_parts))), null)
 }
 
 # Lookup the hosted zone
