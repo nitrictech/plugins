@@ -1,5 +1,7 @@
 name: aws-cloudfront
+display_name: CloudFront
 type: entrypoint
+description: "Creates CloudFront distributions with WAF and custom domain support"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -8,24 +10,33 @@ inputs:
   custom_domain:
     type: string
     nullable: true
+    description: "Custom domain name for CloudFront distribution (e.g., cdn.example.com)"
   custom_domain_is_root:
     type: bool
+    description: "Indicates if the custom domain is the root domain for the purposes of hosted zone lookup and record creation"
   waf_enabled:
     type: bool
+    description: "Enable AWS WAF for CloudFront distribution"
   waf_managed_rules:
     type: list(object)
+    description: "List of AWS Managed Rule Groups to enable"
   geo_restriction_type:
     type: string
+    description: "Type of geo restriction (none, whitelist, blacklist)"
   geo_restriction_locations:
     type: list(string)
+    description: "List of ISO 3166-1 alpha-2 country codes for geo restriction (e.g., US, CA, GB)"
   rate_limit_enabled:
     type: bool
+    description: "Enable rate limiting rules for DDoS protection"
   rate_limit_requests_per_5min:
     type: number
+    description: "Maximum requests per 5-minute period per IP (e.g., 2000)"
   default_cache_policy_id:
     type: string
     nullable: true
   default_origin_request_policy_id:
     type: string
+    description: "Default origin request policy"
 
 outputs: {}

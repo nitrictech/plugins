@@ -1,5 +1,6 @@
 name: aws-lambda
 type: service
+description: "Deploys Lambda functions with IAM roles and optional VPC configuration"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -13,19 +14,27 @@ runtime:
 inputs:
   architecture:
     type: string
+    description: "Instruction set architecture for the Lambda function (e.g., x86_64)"
   timeout:
     type: number
+    description: "Maximum execution time in seconds 1-900 (e.g., 300)"
   memory:
     type: number
+    description: "Amount of memory in MB 128-10240 (e.g., 1024)"
   ephemeral_storage:
     type: number
+    description: "Size of ephemeral storage in MB 512-10240 (e.g., 1024)"
   environment:
     type: map(string)
+    description: "Environment variables for the Lambda function"
   function_url_auth_type:
     type: string
+    description: "Authorization type for function URL (e.g., AWS_IAM)"
   subnet_ids:
     type: list(string)
+    description: "List of subnet IDs for VPC configuration"
   security_group_ids:
     type: list(string)
+    description: "List of security group IDs for VPC configuration"
 
 outputs: {}

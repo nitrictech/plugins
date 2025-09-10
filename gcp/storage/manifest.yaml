@@ -1,5 +1,6 @@
 name: gcp-storage-bucket
 type: storage
+description: "Provisions GCS buckets with lifecycle rules and access controls"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -9,9 +10,12 @@ runtime:
 inputs:
   project_id:
     type: string
+    description: "Google Cloud Project ID (e.g., my-project-123)"
   region:
     type: string
+    description: "Google Cloud region for the storage bucket (e.g., us-central1)"
   storage_class:
     type: string
+    description: "Storage class for the bucket (e.g., STANDARD)"
 
 outputs:

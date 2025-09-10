@@ -1,5 +1,6 @@
 name: aws-fargate
 type: service
+description: "Provisions ECS Fargate services with load balancing and auto-scaling"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -12,22 +13,31 @@ inputs:
   container_port:
     type: number
     required: true
+    description: "Port number the container exposes (e.g., 8080)"
   alb_arn:
     type: string
     required: true
+    description: "ARN of the Application Load Balancer"
   alb_security_group:
     type: string
+    description: "Security group ID of the Application Load Balancer (e.g., sg-0123456789abcdef0)"
   cpu:
     type: number
+    description: "CPU units for the Fargate task (256, 512, 1024, etc.)"
   memory:
     type: number
+    description: "Memory in MB for the Fargate task (e.g., 512)"
   environment:
     type: map(string)
+    description: "Environment variables for the container"
   vpc_id:
     type: string
+    description: "VPC ID where the Fargate service will run (e.g., vpc-12345678)"
   subnets:
     type: list(string)
+    description: "List of subnet IDs for the Fargate service"
   security_groups:
     type: list(string)
+    description: "List of security group IDs for the Fargate service"
 
 outputs: {}

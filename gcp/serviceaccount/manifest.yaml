@@ -1,5 +1,7 @@
 name: gcp-service-account
+display_name: Service Account
 type: identity
+description: "Creates service accounts with IAM bindings for GCP resources"
 icon: ./icon.svg
 identity_type: gcp:iam:service_account
 deployment:
@@ -9,7 +11,9 @@ deployment:
 inputs:
   trusted_actions:
     type: list(string)
+    description: "List of trusted actions for the service account"
   project_id:
     type: string
+    description: "Google Cloud Project ID (e.g., my-project-123)"
 
 outputs:

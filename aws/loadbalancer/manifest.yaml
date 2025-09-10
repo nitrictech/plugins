@@ -1,23 +1,31 @@
 name: aws-loadbalancer
+display_name: Load Balancer
 type: infra
+description: "Creates Application Load Balancer with target groups and listeners"
 icon: ./icon.svg
 deployment:
   terraform: ./module
 inputs:
   load_balancer_type:
     type: string
+    description: "Type of load balancer (e.g., application)"
   name:
     type: string
     required: true
+    description: "Name of the load balancer (e.g., api-alb)"
   internal:
     type: bool
+    description: "Whether the load balancer is internal (true) or internet-facing (false)"
   security_groups:
     type: list(string)
     required: true
+    description: "List of security group IDs to assign to the load balancer"
   subnets:
     type: list(string)
     required: true
+    description: "List of subnet IDs to attach to the load balancer"
 
 outputs:
-  arn: 
+  arn:
     type: string
+    description: "The ARN of the load balancer"

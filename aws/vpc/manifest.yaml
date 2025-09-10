@@ -1,5 +1,7 @@
 name: aws-vpc
+display_name: VPC
 type: infra
+description: "Provisions VPC with public/private subnets and routing tables"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -7,31 +9,45 @@ inputs:
   name:
     type: string
     required: true
+    description: "The name of the VPC (e.g., main-vpc)"
   networking:
     type: object
+    description: "Network configuration including CIDR block and subnet definitions"
   azs:
     type: list(string)
+    description: "List of availability zones to use for the VPC"
   enable_nat_gateway:
     type: bool
+    description: "Enable NAT Gateway for private subnet internet access"
   enable_vpn_gateway:
     type: bool
+    description: "Enable VPN Gateway for the VPC"
   single_nat_gateway:
     type: bool
+    description: "Use a single NAT Gateway instead of one per availability zone"
   default_security_group_ingress:
     type: list(map(string))
+    description: "Ingress rules for the default security group"
   default_security_group_egress:
     type: list(map(string))
+    description: "Egress rules for the default security group"
   tags:
     type: map(string)
+    description: "Tags to apply to the VPC resources"
 
 outputs:
   vpc_id:
     type: string
+    description: "The ID of the VPC"
   private_subnets:
     type: list(string)
+    description: "List of private subnet IDs"
   public_subnets:
     type: list(string)
+    description: "List of public subnet IDs"
   subnets:
     type: list(string)
+    description: "List of all subnet IDs (public and private)"
   default_security_group_id:
     type: string
+    description: "The ID of the default security group"
