@@ -1,5 +1,7 @@
 name: gcp-cdn
+display_name: CDN
 type: entrypoint
+description: "Global Content Delivery Network for fast, reliable content delivery"
 icon: ./icon.svg
 deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
@@ -8,9 +10,15 @@ deployment:
 inputs:
   project_id:
     type: string
+    description: "Google Cloud Project ID"
+    example: "my-project-123"
   region:
     type: string
+    description: "Google Cloud region"
+    example: "us-central1"
   cdn_domain:
     type: object
+    description: "CDN domain configuration"
+    example: '{"domain": "cdn.example.com"}'
 
 outputs:

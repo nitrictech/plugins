@@ -1,23 +1,37 @@
 name: aws-loadbalancer
+display_name: Load Balancer
 type: infra
+description: "Distribute incoming traffic across multiple targets"
 icon: ./icon.svg
 deployment:
   terraform: ./module
 inputs:
   load_balancer_type:
     type: string
+    description: "Type of load balancer (application, network, gateway)"
+    example: "application"
   name:
     type: string
     required: true
+    description: "Name of the load balancer"
+    example: "api-alb"
   internal:
     type: bool
+    description: "Whether the load balancer is internal (true) or internet-facing (false)"
+    example: false
   security_groups:
     type: list(string)
     required: true
+    description: "List of security group IDs to assign to the load balancer"
+    example: '["sg-0123456789abcdef0", "sg-0987654321fedcba0"]'
   subnets:
     type: list(string)
     required: true
+    description: "List of subnet IDs to attach to the load balancer"
+    example: '["subnet-12345678", "subnet-87654321"]'
 
 outputs:
-  arn: 
+  arn:
     type: string
+    description: "The ARN of the load balancer"
+    example: "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-alb/50dc6c495c0c9188"

@@ -1,5 +1,6 @@
 name: aws-fargate
 type: service
+description: "Run long-running containerized services with automatic scaling"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -12,22 +13,40 @@ inputs:
   container_port:
     type: number
     required: true
+    description: "Port number the container exposes"
+    example: 8080
   alb_arn:
     type: string
     required: true
+    description: "ARN of the Application Load Balancer"
+    example: "arn:aws:elasticloadbalancing:us-west-2:123456789012:loadbalancer/app/my-alb/50dc6c495c0c9188"
   alb_security_group:
     type: string
+    description: "Security group ID of the Application Load Balancer"
+    example: "sg-0123456789abcdef0"
   cpu:
     type: number
+    description: "CPU units for the Fargate task (256, 512, 1024, etc.)"
+    example: 256
   memory:
     type: number
+    description: "Memory in MB for the Fargate task"
+    example: 512
   environment:
     type: map(string)
+    description: "Environment variables for the container"
+    example: '{"NODE_ENV": "production", "LOG_LEVEL": "info"}'
   vpc_id:
     type: string
+    description: "VPC ID where the Fargate service will run"
+    example: "vpc-12345678"
   subnets:
     type: list(string)
+    description: "List of subnet IDs for the Fargate service"
+    example: '["subnet-12345678", "subnet-87654321"]'
   security_groups:
     type: list(string)
+    description: "List of security group IDs for the Fargate service"
+    example: '["sg-0123456789abcdef0"]'
 
 outputs: {}

@@ -1,5 +1,7 @@
 name: aws-vpc
+display_name: VPC
 type: infra
+description: "Virtual Private Cloud with isolated network and subnets"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -7,31 +9,59 @@ inputs:
   name:
     type: string
     required: true
+    description: "The name of the VPC"
+    example: "main-vpc"
   networking:
     type: object
+    description: "Network configuration including CIDR block and subnet definitions"
+    example: '{"cidr_block": "10.0.0.0/16", "private_subnets": ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"], "public_subnets": ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]}'
   azs:
     type: list(string)
+    description: "List of availability zones to use for the VPC"
+    example: '["us-west-2a", "us-west-2b", "us-west-2c"]'
   enable_nat_gateway:
     type: bool
+    description: "Enable NAT Gateway for private subnet internet access"
+    example: false
   enable_vpn_gateway:
     type: bool
+    description: "Enable VPN Gateway for the VPC"
+    example: false
   single_nat_gateway:
     type: bool
+    description: "Use a single NAT Gateway instead of one per availability zone"
+    example: false
   default_security_group_ingress:
     type: list(map(string))
+    description: "Ingress rules for the default security group"
+    example: '[{"from_port": "443", "to_port": "443", "protocol": "tcp", "cidr_blocks": "10.0.0.0/16"}]'
   default_security_group_egress:
     type: list(map(string))
+    description: "Egress rules for the default security group"
+    example: '[{"from_port": "0", "to_port": "0", "protocol": "-1", "cidr_blocks": "0.0.0.0/0"}]'
   tags:
     type: map(string)
+    description: "Tags to apply to the VPC resources"
+    example: '{"Environment": "production", "Team": "platform"}'
 
 outputs:
   vpc_id:
     type: string
+    description: "The ID of the VPC"
+    example: "vpc-12345678"
   private_subnets:
     type: list(string)
+    description: "List of private subnet IDs"
+    example: '["subnet-12345678", "subnet-23456789"]'
   public_subnets:
     type: list(string)
+    description: "List of public subnet IDs"
+    example: '["subnet-87654321", "subnet-76543210"]'
   subnets:
     type: list(string)
+    description: "List of all subnet IDs (public and private)"
+    example: '["subnet-12345678", "subnet-23456789", "subnet-87654321", "subnet-76543210"]'
   default_security_group_id:
     type: string
+    description: "The ID of the default security group"
+    example: "sg-0123456789abcdef0"

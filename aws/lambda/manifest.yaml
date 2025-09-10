@@ -1,5 +1,6 @@
 name: aws-lambda
 type: service
+description: "Run event-driven functions that execute on demand"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -13,19 +14,35 @@ runtime:
 inputs:
   architecture:
     type: string
+    description: "Instruction set architecture for the Lambda function (x86_64 or arm64)"
+    example: "x86_64"
   timeout:
     type: number
+    description: "Maximum execution time in seconds (1-900)"
+    example: 300
   memory:
     type: number
+    description: "Amount of memory in MB (128-10240)"
+    example: 1024
   ephemeral_storage:
     type: number
+    description: "Size of ephemeral storage in MB (512-10240)"
+    example: 1024
   environment:
     type: map(string)
+    description: "Environment variables for the Lambda function"
+    example: '{"NODE_ENV": "production", "LOG_LEVEL": "info"}'
   function_url_auth_type:
     type: string
+    description: "Authorization type for function URL (AWS_IAM or NONE)"
+    example: "AWS_IAM"
   subnet_ids:
     type: list(string)
+    description: "List of subnet IDs for VPC configuration"
+    example: '["subnet-12345678", "subnet-87654321"]'
   security_group_ids:
     type: list(string)
+    description: "List of security group IDs for VPC configuration"
+    example: '["sg-0123456789abcdef0"]'
 
 outputs: {}

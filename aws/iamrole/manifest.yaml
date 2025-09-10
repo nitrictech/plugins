@@ -1,5 +1,7 @@
 name: aws-iam-role
+display_name: IAM Role
 type: identity
+description: "Identity and Access Management role for secure access to AWS services"
 identity_type: aws:iam:role
 icon: ./icon.svg
 deployment:
@@ -7,7 +9,11 @@ deployment:
 inputs:
   trusted_services:
     type: list(string)
+    description: "List of AWS services that can assume this role"
+    example: '["lambda.amazonaws.com", "ecs-tasks.amazonaws.com"]'
   trusted_actions:
     type: list(string)
+    description: "List of trusted actions for the assume role policy"
+    example: '["sts:AssumeRole"]'
 
 outputs: {}

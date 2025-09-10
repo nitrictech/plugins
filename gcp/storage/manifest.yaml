@@ -1,5 +1,6 @@
 name: gcp-storage-bucket
 type: storage
+description: "Object storage for files, images, and data"
 icon: ./icon.svg
 deployment:
   terraform: ./module
@@ -9,9 +10,15 @@ runtime:
 inputs:
   project_id:
     type: string
+    description: "Google Cloud Project ID"
+    example: "my-project-123"
   region:
     type: string
+    description: "Google Cloud region for the storage bucket"
+    example: "us-central1"
   storage_class:
     type: string
+    description: "Storage class for the bucket (STANDARD, NEARLINE, COLDLINE, ARCHIVE)"
+    example: "STANDARD"
 
 outputs:

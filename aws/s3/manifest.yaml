@@ -1,5 +1,6 @@
 name: aws-s3-bucket
 type: storage
+description: "Object storage for storing and retrieving data from anywhere"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -11,5 +12,7 @@ runtime:
 inputs:
   tags:
     type: map(string)
+    description: "Tags to apply to the S3 bucket"
+    example: '{"Environment": "production", "Purpose": "media-storage"}'
 
 outputs: {}
