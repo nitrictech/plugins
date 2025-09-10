@@ -258,7 +258,6 @@ resource "aws_cloudfront_cache_policy" "default_cache_policy" {
       # Cache reasonable headers (with the exception of the Host header as serverless platforms we use do not support it)
       headers {
         items = [
-          "Authorization",
           "x-method-override",
           "origin",
           "x-http-method",

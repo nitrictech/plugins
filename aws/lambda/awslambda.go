@@ -81,6 +81,11 @@ func (a *awslambdaService) handleHTTPEvent(ctx context.Context, evt *events.Lamb
 		req.Header.Add(k, v)
 	}
 
+	// Preserve auth header for lambdas and other OAC dependent services
+	if evt.Headers["X-Forwarded-Auth"] != "" {
+		req.Header.Add("Authorization", evt.Headers["X-Forwarded-Auth"])
+	}
+
 	req.URL.RawQuery = evt.RawQueryString
 
 	resp, err := a.proxy.Forward(ctx, req)
