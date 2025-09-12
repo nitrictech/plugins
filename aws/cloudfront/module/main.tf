@@ -122,6 +122,14 @@ resource "aws_cloudfront_function" "api-url-rewrite-function" {
   })
 }
 
+resource "aws_cloudfront_function" "preserve-auth-function" {
+  name    = "preserve-auth-function"
+  runtime = "cloudfront-js-1.0"
+  comment = "Rewrite API URLs routed to Suga services"
+  publish = true
+  code    = file("${path.module}/scripts/preserve-auth.js")
+}
+
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
   count = var.waf_enabled ? 1 : 0
 
@@ -359,6 +367,11 @@ resource "aws_cloudfront_distribution" "distribution" {
 
       function_association {
         event_type = "viewer-request"
+        function_arn = aws_cloudfront_function.preserve-auth-function.arn
+      }
+
+      function_association {
+        event_type = "viewer-request"
         function_arn = aws_cloudfront_function.api-url-rewrite-function.arn
       }
 
@@ -397,6 +410,11 @@ resource "aws_cloudfront_distribution" "distribution" {
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = "${keys(local.default_origin)[0]}"
     viewer_protocol_policy = "redirect-to-https"
+
+    function_association {
+      event_type = "viewer-request"
+      function_arn = aws_cloudfront_function.preserve-auth-function.arn
+    }
 
     # Legacy configuration for custom cache behavior
     # forwarded_values {
