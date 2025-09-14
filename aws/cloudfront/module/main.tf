@@ -1,3 +1,4 @@
+
 locals {
   s3_origin_id = "publicOrigin"
   default_origin = {
@@ -122,12 +123,56 @@ resource "aws_cloudfront_function" "api-url-rewrite-function" {
   })
 }
 
-resource "aws_cloudfront_function" "preserve-auth-function" {
-  name    = "preserve-auth-function"
-  runtime = "cloudfront-js-1.0"
-  comment = "Rewrite API URLs routed to Suga services"
-  publish = true
-  code    = file("${path.module}/scripts/preserve-auth.js")
+# Lambda@Edge function for auth preservation and webhook signing
+resource "aws_iam_role" "lambda_edge_origin_request" {
+  name = "lambda-edge-origin-request-role"
+  
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_edge_origin_request_basic" {
+  role       = aws_iam_role.lambda_edge_origin_request.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+data "archive_file" "origin_request_lambda" {
+  type        = "zip"
+  output_path = "${path.module}/lambda-origin-request.zip"
+  
+  source {
+    content  = file("${path.module}/scripts/origin-request.js")
+    filename = "index.js"
+  }
+}
+
+resource "aws_lambda_function" "origin_request" {
+  region           = "us-east-1"
+  filename         = data.archive_file.origin_request_lambda.output_path
+  function_name    = "cloudfront-origin-request"
+  role             = aws_iam_role.lambda_edge_origin_request.arn
+  handler          = "index.handler"
+  source_code_hash = data.archive_file.origin_request_lambda.output_base64sha256
+  runtime          = "nodejs18.x"
+  timeout          = 5
+  memory_size      = 128
+  publish          = true
+}
+
+resource "aws_lambda_permission" "allow_cloudfront_origin_request" {
+  region        = "us-east-1"
+  statement_id  = "AllowExecutionFromCloudFront"
+  action        = "lambda:GetFunction"
+  function_name = aws_lambda_function.origin_request.function_name
+  principal     = "edgelambda.amazonaws.com"
 }
 
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
@@ -267,6 +312,10 @@ resource "aws_cloudfront_cache_policy" "default_cache_policy" {
       # Cache reasonable headers (with the exception of the Host header as serverless platforms we use do not support it)
       headers {
         items = [
+          # We don't need this to forward the auth header, but we'll include it
+          # in the cache key to prevent leaking cached data between users where auth headers are present
+          # This is to guard against where cache-control headers are not set correctly by the origin
+          "Authorization",
           "x-method-override",
           "origin",
           "x-http-method",
@@ -367,12 +416,14 @@ resource "aws_cloudfront_distribution" "distribution" {
 
       function_association {
         event_type = "viewer-request"
-        function_arn = aws_cloudfront_function.preserve-auth-function.arn
+        function_arn = aws_cloudfront_function.api-url-rewrite-function.arn
       }
 
-      function_association {
-        event_type = "viewer-request"
-        function_arn = aws_cloudfront_function.api-url-rewrite-function.arn
+      # Add Lambda@Edge for auth preservation and webhook signing
+      lambda_function_association {
+        event_type   = "origin-request"
+        lambda_arn   = aws_lambda_function.origin_request.qualified_arn
+        include_body = true
       }
 
       allowed_methods = ["GET","HEAD","OPTIONS","PUT","POST","PATCH","DELETE"]
@@ -411,9 +462,11 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = "${keys(local.default_origin)[0]}"
     viewer_protocol_policy = "redirect-to-https"
 
-    function_association {
-      event_type = "viewer-request"
-      function_arn = aws_cloudfront_function.preserve-auth-function.arn
+    # Add Lambda@Edge for auth preservation and webhook signing
+    lambda_function_association {
+      event_type   = "origin-request"
+      lambda_arn   = aws_lambda_function.origin_request.qualified_arn
+      include_body = true
     }
 
     # Legacy configuration for custom cache behavior
