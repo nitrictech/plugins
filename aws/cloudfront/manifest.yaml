@@ -5,6 +5,11 @@ deployment:
   terraform: ./module
 
 inputs:
+  custom_domain:
+    type: string
+    nullable: true
+  custom_domain_is_root:
+    type: bool
   waf_enabled:
     type: bool
   waf_managed_rules:
