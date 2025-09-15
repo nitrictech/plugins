@@ -39,12 +39,16 @@ variable "waf_managed_rules" {
     name            = string
     priority        = number
     override_action = string
+    rule_action_overrides = optional(map(string), {})
   }))
   default = [
     {
       name            = "AWSManagedRulesCommonRuleSet"
       priority        = 10
       override_action = "none"
+      rule_action_overrides = {
+        "SizeRestrictions_BODY" = "allow",
+      }
     },
     {
       name            = "AWSManagedRulesKnownBadInputsRuleSet"
