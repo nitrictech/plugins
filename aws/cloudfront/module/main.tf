@@ -274,8 +274,6 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   }
 }
 
-
-# Determine the hosted zone domain based on whether custom_domain is root
 # Determine the hosted zone domain based on whether custom_domain is root
 locals {
   domain_parts = try(split(".", var.custom_domain), null)
@@ -326,7 +324,7 @@ resource "aws_cloudfront_cache_policy" "default_cache_policy" {
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
-      cookie_behavior = "all"
+      cookie_behavior = "none"
     }
     headers_config {
       header_behavior = "whitelist"
