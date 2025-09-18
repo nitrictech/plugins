@@ -10,33 +10,34 @@ inputs:
   custom_domain:
     type: string
     nullable: true
-    description: "Custom domain name for CloudFront distribution (e.g., cdn.example.com)"
+    description: "Custom domain name (e.g. `cdn.example.com`). If null, uses default CloudFront domain (`*.cloudfront.net`)"
   custom_domain_is_root:
     type: bool
-    description: "Indicates if the custom domain is the root domain for the purposes of hosted zone lookup and record creation"
+    description: "`false` (default) for sub-domains, `true` for root domains of the Route 53 hosted zone. Only applicable when custom_domain is provided"
   waf_enabled:
     type: bool
-    description: "Enable AWS WAF for CloudFront distribution"
+    description: "`false` (default) disables Web Application Firewall. `true` enables WAF protection against SQL injection and XSS attacks"
   waf_managed_rules:
     type: list(object)
-    description: "List of AWS Managed Rule Groups to enable"
+    description: 'AWS Managed Rule Groups to enable. Only effective when waf_enabled is true (e.g. `[{"name": "AWSManagedRulesCommonRuleSet", "priority": 1}]`)'
   geo_restriction_type:
     type: string
-    description: "Type of geo restriction (none, whitelist, blacklist)"
+    description: "Controls country access: `none` (default) allows all, `whitelist` allows only specified, `blacklist` blocks specified countries"
   geo_restriction_locations:
     type: list(string)
-    description: "List of ISO 3166-1 alpha-2 country codes for geo restriction (e.g., US, CA, GB)"
+    description: "ISO 3166-1 alpha-2 country codes for geo restriction (e.g. `US`, `CA`, `GB`). Only used when geo_restriction_type is 'whitelist' or 'blacklist'"
   rate_limit_enabled:
     type: bool
-    description: "Enable rate limiting rules for DDoS protection"
+    description: "`true` (default) limits requests per IP, protecting against DDoS attacks. `false` disables rate limiting"
   rate_limit_requests_per_5min:
     type: number
-    description: "Maximum requests per 5-minute period per IP (e.g., 2000)"
+    description: "Maximum requests per 5-minute period per IP (e.g. `2000`). Only applied when rate_limit_enabled is true"
   default_cache_policy_id:
     type: string
     nullable: true
+    description: "Controls caching behavior (headers, cookies, query strings in cache key). If null, creates custom policy that respects origin cache headers and includes auth headers"
   default_origin_request_policy_id:
     type: string
-    description: "Default origin request policy"
+    description: "Controls which headers, cookies, and query strings are forwarded to origin server. Default uses AllViewerExceptHostHeader policy. Common IDs: `88a5eaf4-2fd4-4709-b370-b4c650ea3fcf` (CORS-S3Origin), `216adef6-5c7f-47e4-b989-5492eafa07d3` (AllViewer)"
 
 outputs: {}

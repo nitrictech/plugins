@@ -1,6 +1,6 @@
 name: neon-db
 type: database
-description: "Provisions Neon PostgreSQL database with connection pooling"
+description: "Provisions Neon PostgreSQL database with branching and auto-scaling"
 icon: ./icon.svg
 required_identities: []
 deployment:
@@ -8,12 +8,12 @@ deployment:
 inputs:
   project_id:
     type: string
-    description: "Neon project ID (e.g., misty-wind-123456)"
+    description: "Unique identifier for Neon project that groups databases and manages billing, permissions, and resource limits (e.g. `misty-wind-123456`)"
   branch_id:
     type: string
-    description: "Neon branch ID for the database (e.g., br-cool-sunset-123456)"
+    description: "Specific branch within Neon project representing point-in-time database snapshot, enabling development workflows with isolated environments (e.g. `br-cool-sunset-123456`)"
 
 outputs:
   connection_string:
     type: string
-    description: "PostgreSQL connection URI (scheme postgresql:// or postgres://)"
+    description: "PostgreSQL connection URI with scheme `postgresql://` or `postgres://`"

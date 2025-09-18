@@ -14,27 +14,27 @@ runtime:
 inputs:
   architecture:
     type: string
-    description: "Instruction set architecture for the Lambda function (e.g., x86_64)"
+    description: "Instruction set architecture for the Lambda function (e.g. `x86_64`)"
   timeout:
     type: number
-    description: "Maximum execution time in seconds 1-900 (e.g., 300)"
+    description: "Maximum execution time in seconds 1-900 (e.g. `300`)"
   memory:
     type: number
-    description: "Amount of memory in MB 128-10240 (e.g., 1024)"
+    description: "Amount of memory in MB 128-10240 (e.g. `1024`)"
   ephemeral_storage:
     type: number
-    description: "Size of ephemeral storage in MB 512-10240 (e.g., 1024)"
+    description: "Size of ephemeral storage in MB 512-10240 (e.g. `1024`)"
   environment:
     type: map(string)
-    description: "Environment variables for the Lambda function"
+    description: "Environment variables for the Lambda function (e.g. `{\"DATABASE_URL\": \"postgres://...\", \"LOG_LEVEL\": \"info\"}`)"
   function_url_auth_type:
     type: string
-    description: "Authorization type for function URL (e.g., AWS_IAM)"
+    description: "Authorization type for function URL (e.g. `AWS_IAM`)"
   subnet_ids:
     type: list(string)
-    description: "List of subnet IDs for VPC configuration"
+    description: "Subnet IDs for Lambda VPC deployment, enabling access to private resources like RDS databases or internal services. Must be used with security_group_ids - both provided for VPC deployment or both empty for internet-only Lambda (e.g. `["subnet-private-1", "subnet-private-2"]`)"
   security_group_ids:
     type: list(string)
-    description: "List of security group IDs for VPC configuration"
+    description: "Security group IDs controlling network access when Lambda runs in VPC. Must be used with subnet_ids - both provided for VPC deployment or both empty for internet-only Lambda. Configure outbound rules for database, API, or service access (e.g. `["sg-lambda-rds", "sg-lambda-redis"]`)"
 
 outputs: {}

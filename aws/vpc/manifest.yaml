@@ -9,45 +9,45 @@ inputs:
   name:
     type: string
     required: true
-    description: "The name of the VPC (e.g., main-vpc)"
+    description: "VPC name (e.g. `main-vpc`)"
   networking:
     type: object
-    description: "Network configuration including CIDR block and subnet definitions"
+    description: "Network configuration including CIDR block and subnet definitions (e.g. `{\"cidr_block\": \"10.0.0.0/16\", \"public_subnets\": [\"10.0.1.0/24\", \"10.0.2.0/24\"], \"private_subnets\": [\"10.0.10.0/24\", \"10.0.11.0/24\"]}`)"
   azs:
     type: list(string)
-    description: "List of availability zones to use for the VPC"
+    description: "Availability zones for the VPC (e.g. `[\"us-east-1a\", \"us-east-1b\", \"us-east-1c\"]`)"
   enable_nat_gateway:
     type: bool
-    description: "Enable NAT Gateway for private subnet internet access"
+    description: "`false` (default) keeps private subnets completely isolated. `true` allows private subnet resources to access internet for updates and external API calls while remaining unreachable from internet"
   enable_vpn_gateway:
     type: bool
-    description: "Enable VPN Gateway for the VPC"
+    description: "`false` (default) if no on-premises connections needed. `true` creates VPN gateway enabling secure connections between on-premises network and AWS VPC"
   single_nat_gateway:
     type: bool
-    description: "Use a single NAT Gateway instead of one per availability zone"
+    description: "`false` (default) deploys one NAT Gateway per availability zone for high availability. `true` uses one shared NAT Gateway for all zones (reduces costs but creates single point of failure). Only applicable when enable_nat_gateway is `true`"
   default_security_group_ingress:
     type: list(map(string))
-    description: "Ingress rules for the default security group"
+    description: "Default security group ingress rules (e.g. `[{"from_port": "80", "to_port": "80", "protocol": "tcp", "cidr_blocks": "0.0.0.0/0"}]`)"
   default_security_group_egress:
     type: list(map(string))
-    description: "Egress rules for the default security group"
+    description: "Default security group egress rules (e.g. `[{"from_port": "0", "to_port": "0", "protocol": "-1", "cidr_blocks": "0.0.0.0/0"}]`)"
   tags:
     type: map(string)
-    description: "Tags to apply to the VPC resources"
+    description: "VPC resource tags (e.g. `{\"Environment\": \"production\", \"Project\": \"web-app\"}`)"
 
 outputs:
   vpc_id:
     type: string
-    description: "The ID of the VPC"
+    description: "Unique identifier for the Virtual Private Cloud, used to reference this VPC when creating subnets, security groups, and other network resources"
   private_subnets:
     type: list(string)
-    description: "List of private subnet IDs"
+    description: "Subnet IDs without direct internet access, used for databases, internal services, and resources that should not be publicly accessible"
   public_subnets:
     type: list(string)
-    description: "List of public subnet IDs"
+    description: "Subnet IDs with internet gateway access, used for load balancers, NAT gateways, and resources needing direct internet connectivity"
   subnets:
     type: list(string)
-    description: "List of all subnet IDs (public and private)"
+    description: "Combined list of all subnet IDs, useful when resources need to span both public and private subnets regardless of internet access"
   default_security_group_id:
     type: string
-    description: "The ID of the default security group"
+    description: "VPC default security group ID, automatically applied to resources without explicit security groups, useful for setting baseline network rules"

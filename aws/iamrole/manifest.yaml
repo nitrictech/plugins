@@ -9,9 +9,9 @@ deployment:
 inputs:
   trusted_services:
     type: list(string)
-    description: "List of AWS services that can assume this role (e.g., lambda.amazonaws.com)"
+    description: "AWS services that can assume this role (e.g. `lambda.amazonaws.com`)"
   trusted_actions:
     type: list(string)
-    description: "List of trusted actions for the assume role policy (e.g., sts:AssumeRole)"
+    description: "Trusted actions for the assume role policy (e.g. `sts:AssumeRole`)"
 
 outputs: {}

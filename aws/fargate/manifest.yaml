@@ -1,6 +1,6 @@
 name: aws-fargate
 type: service
-description: "Provisions ECS Fargate services with load balancing and auto-scaling"
+description: "Provisions ECS Fargate services with load balancer integration and container orchestration"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
@@ -13,31 +13,31 @@ inputs:
   container_port:
     type: number
     required: true
-    description: "Port number the container exposes (e.g., 8080)"
+    description: "Container port number (e.g. `8080`)"
   alb_arn:
     type: string
     required: true
-    description: "ARN of the Application Load Balancer"
+    description: "Application Load Balancer ARN"
   alb_security_group:
     type: string
-    description: "Security group ID of the Application Load Balancer (e.g., sg-0123456789abcdef0)"
+    description: "Application Load Balancer security group ID (e.g. `sg-0123456789abcdef0`)"
   cpu:
     type: number
-    description: "CPU units for the Fargate task (256, 512, 1024, etc.)"
+    description: "CPU units for Fargate task: `256`, `512`, `1024`, `2048`, `4096`, `8192`, `16384`"
   memory:
     type: number
-    description: "Memory in MB for the Fargate task (e.g., 512)"
+    description: "Memory in MB for Fargate task (e.g. `512`)"
   environment:
     type: map(string)
-    description: "Environment variables for the container"
+    description: "Container environment variables (e.g. `{"NODE_ENV": "production", "PORT": "8080"}`)"
   vpc_id:
     type: string
-    description: "VPC ID where the Fargate service will run (e.g., vpc-12345678)"
+    description: "VPC ID where Fargate service runs (e.g. `vpc-12345678`)"
   subnets:
     type: list(string)
-    description: "List of subnet IDs for the Fargate service"
+    description: "Subnet IDs where Fargate tasks run. Must be subnets within VPC specified by vpc_id. Use private subnets for internal services or public subnets for tasks needing direct internet access (e.g. `["subnet-12345", "subnet-67890"]`)"
   security_groups:
     type: list(string)
-    description: "List of security group IDs for the Fargate service"
+    description: "Security group IDs controlling inbound and outbound network traffic for Fargate tasks. Configure to allow access from load balancers and to required services (e.g. `["sg-web", "sg-database"]`)"
 
 outputs: {}
