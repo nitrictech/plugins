@@ -1,5 +1,7 @@
 name: gcp-cloudrun
+display_name: Cloud Run
 type: service
+description: "Deploys Cloud Run services with auto-scaling and service accounts"
 icon: ./icon.svg
 required_identities:
   - gcp:iam:service_account
@@ -12,25 +14,36 @@ runtime:
 inputs:
   environment:
     type: map(string)
+    description: "Cloud Run service environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`)"
   memory_mb:
     type: number
+    description: "Memory allocation for Cloud Run service in MB (e.g. `512`)"
   cpus:
     type: number
+    description: "CPU allocation for Cloud Run service (e.g. `1`)"
   gpus:
     type: number
+    description: "GPU allocation for Cloud Run service (e.g. `0`)"
   min_instances:
     type: number
+    description: "Minimum instances to keep running (e.g. `0`)"
   max_instances:
     type: number
+    description: "Maximum instances that can be created (e.g. `10`)"
   container_concurrency:
     type: number
+    description: "Maximum concurrent requests per instance (e.g. `80`)"
   timeout_seconds:
     type: number
+    description: "Maximum request timeout in seconds (e.g. `10`)"
   project_id:
     type: string
+    description: "Google Cloud Project ID (e.g. `my-project-123`)"
   region:
     type: string
+    description: "Google Cloud region for service deployment (e.g. `us-central1`)"
   container_port:
     type: number
+    description: "Container port number (e.g. `9001`)"
 
 outputs:
