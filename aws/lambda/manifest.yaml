@@ -1,6 +1,6 @@
 name: aws-lambda
 type: service
-description: "Deploys Lambda functions with IAM roles and optional VPC configuration"
+description: "Deploys Services as container running on AWS Lambda, with IAM roles and optional VPC configuration"
 icon: ./icon.svg
 required_identities:
   - aws:iam:role
