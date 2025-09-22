@@ -1,7 +1,7 @@
 name: aws-cloudfront
 display_name: CloudFront
 type: entrypoint
-description: "Creates CloudFront distributions with WAF and custom domain support"
+description: "Creates CloudFront distributions with optional WAF and custom domain support"
 icon: ./icon.svg
 deployment:
   terraform: ./module
