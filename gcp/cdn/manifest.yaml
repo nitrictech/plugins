@@ -1,5 +1,7 @@
 name: gcp-cdn
+display_name: CDN
 type: entrypoint
+description: "Creates Cloud CDN with load balancing and SSL certificates"
 icon: ./icon.svg
 deployment:
   # NOTE: // is required to reference a sub-path of repository for terraform modules
@@ -8,9 +10,12 @@ deployment:
 inputs:
   project_id:
     type: string
+    description: "Google Cloud Project ID (e.g. `my-project-123`)"
   region:
     type: string
+    description: "Google Cloud region (e.g. `us-central1`)"
   cdn_domain:
     type: object
+    description: "CDN domain configuration (e.g. `{\"name\": \"cdn.example.com\", \"ssl\": true}`)"
 
 outputs:
