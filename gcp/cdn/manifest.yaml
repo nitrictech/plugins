@@ -16,6 +16,6 @@ inputs:
     description: "Google Cloud region (e.g. `us-central1`)"
   cdn_domain:
     type: object
-    description: "CDN domain configuration (e.g. `{\"name\": \"cdn.example.com\", \"ssl\": true}`)"
+    description: 'CDN domain configuration (e.g. `{"name": "cdn.example.com", "ssl": true}`)'
 
 outputs:

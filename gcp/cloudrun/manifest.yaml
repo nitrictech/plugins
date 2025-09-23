@@ -14,7 +14,7 @@ runtime:
 inputs:
   environment:
     type: map(string)
-    description: "Cloud Run service environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`)"
+    description: 'Cloud Run service environment variables (e.g. `{"NODE_ENV": "production", "API_KEY": "secret"}`)'
   memory_mb:
     type: number
     description: "Memory allocation for Cloud Run service in MB (e.g. `512`)"

@@ -11,7 +11,7 @@ deployment:
 inputs:
   trusted_actions:
     type: list(string)
-    description: "IAM actions/roles this service account can perform, defining GCP resource access (e.g. `[\"storage.objects.get\", \"storage.objects.create\", \"cloudsql.instances.connect\"]`)"
+    description: 'IAM actions/roles this service account can perform, defining GCP resource access (e.g. `["storage.objects.get", "storage.objects.create", "cloudsql.instances.connect"]`)'
   project_id:
     type: string
     description: "Google Cloud Project ID (e.g. `my-project-123`)"

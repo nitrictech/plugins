@@ -19,11 +19,11 @@ inputs:
   security_groups:
     type: list(string)
     required: true
-    description: "Security group IDs controlling load balancer traffic. Configure inbound rules for ports 80/443 from internet or specific IP ranges (e.g. `["sg-alb-web"]`)"
+    description: 'Security group IDs controlling load balancer traffic. Configure inbound rules for ports 80/443 from internet or specific IP ranges (e.g. `["sg-alb-web"]`)'
   subnets:
     type: list(string)
     required: true
-    description: "Subnet IDs across multiple availability zones for load balancer deployment. Use public subnets when internal=`false` (internet-facing) or private subnets when internal=`true` (internal-only) (e.g. `["subnet-public-1a", "subnet-public-1b"]`)"
+    description: 'Subnet IDs across multiple availability zones for load balancer deployment. Use public subnets when internal=`false` (internet-facing) or private subnets when internal=`true` (internal-only) (e.g. `["subnet-public-1a", "subnet-public-1b"]`)'
 
 outputs:
   arn:
